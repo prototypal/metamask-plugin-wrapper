@@ -46,24 +46,24 @@ Here we use BIP32 and BIP44 and some custom path
 e.g.
 m / purpose' / coin_type' / account' / change / pluginUniqueId / address_index
 
-* getPluginAccountsXPub() returns bytes:
-* signWithPluginAccount(uint index, bytes dataToSign) returns bytes:
+* **getPluginAccountsXPub() returns bytes**:
+* **signWithPluginAccount(uint index, bytes dataToSign) returns bytes**:
 Sign with a plugin’s account
 this is eth sign ? we should support alternative signing / encryption methods ?
-* requestFunding(uint suggestedAmount) returns ethTxHash:
+* **requestFunding(uint suggestedAmount) returns ethTxHash**:
 Request funding from an account outside of plugin control 
 User can select account and amount in metamask
 (send Ether tx without tx data)
-* withdrawFromPlugin:
+* **withdrawFromPlugin**:
 Withdraw ? 0 ether function call from an account outside of plugin control → this is a security problem (MITM), but if not from an account outside, how do we pay the gas?
-* persistInMetaMaskDb(key, data):
+* **persistInMetaMaskDb(key, data)**:
 Store in MetaMask localdb, specific store for plugin
-* readInMetaMaskDb(key) returns data:
-* communicateWithPlugin(pluginUniqueId, data):
+* **readInMetaMaskDb(key) returns data**:
+* **communicateWithPlugin(pluginUniqueId, data)**:
 Communicate with another plugin
-* encrypt(uint index, data) return bytes
+* **encrypt(uint index, data) return bytes**
 Request Encryption / Decryption
-* decrypt(uint index, bytes) return data
+* **decrypt(uint index, bytes) return data**
 
 
 ### for inpage:
