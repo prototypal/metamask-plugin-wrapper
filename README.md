@@ -42,19 +42,26 @@ to communicate with inpages
 Derive an new account for the plugin (along some specific derivation path) and get public key
 
 Should we allow to specify alternative derivation types and path ?
-Here we use BIP32 and BIP44 and some custom path
-e.g.
-m / purpose' / coin_type' / account' / change / pluginUniqueId / address_index
+we use BIP32 and BIP44 and some custom path
 
-* **getPluginAccountsXPub() returns bytes**:
+key types:
+bip44 extension (eth not allowed)
+m / purpose' / coin_type' / account' / change / address_index
+plugin derivation key
+m / pluginUniqueId / coin_type' / account' / change / address_index
+
+* **getPluginAccountsXPub(uint account) returns bytes**:
+returns the extended public key
+
 * **signWithPluginAccount(uint index, bytes dataToSign) returns bytes**:
 Sign with a plugin’s account
 this is eth sign ? we should support alternative signing / encryption methods ?
-* **requestFunding(uint suggestedAmount) returns ethTxHash**:
+* **requestFunding(address depositAddress, uint suggestedAmount) returns ethTxHash**:
 Request funding from an account outside of plugin control 
 User can select account and amount in metamask
 (send Ether tx without tx data)
-* **withdrawFromPlugin**:
+* **withdrawFromPlugin(address withdrawAddress)**:
+withdrawAddress should be a depositedAddress already used
 Withdraw ? 0 ether function call from an account outside of plugin control → this is a security problem (MITM), but if not from an account outside, how do we pay the gas?
 * **persistInMetaMaskDb(key, data)**:
 Store in MetaMask localdb, specific store for plugin
