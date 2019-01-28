@@ -12,9 +12,10 @@ Will be ran in metamask extension background page
 * author eth address
 (all below will be resolved by an eth smart contract based registrar from above, or from a single URL)
 * plugin script name
+* plugin script url
+
 * plugin symbol
 * plugin image
-* plugin script url
 * plugin eth gateway contract
 
 
@@ -35,16 +36,18 @@ to communicate with inpages
 
 
 
-## Message API Specs
+## Message API
 
 ### for plugin script:
+
+#### crypto:
 * getPluginAccountPubKey(uint index) returns bytes:
 Derive an new account for the plugin (along some specific derivation path) and get public key
 
 Should we allow to specify alternative derivation types and path ?
 we use BIP32 and BIP44 and some custom path
 
-key types:
+key types (selected on installation):
 bip44 extension (eth not allowed)
 m / purpose' / coin_type' / account' / change / address_index
 plugin derivation key
@@ -56,21 +59,119 @@ returns the extended public key
 * **signWithPluginAccount(uint index, bytes dataToSign) returns bytes**:
 Sign with a plugin’s account
 this is eth sign ? we should support alternative signing / encryption methods ?
+
 * **requestFunding(address depositAddress, uint suggestedAmount) returns ethTxHash**:
 Request funding from an account outside of plugin control 
 User can select account and amount in metamask
 (send Ether tx without tx data)
-* **withdrawFromPlugin(address withdrawAddress)**:
+
+* **withdrawFromPlugin(address withdrawAddress, bytes txData)**:
+0 ether function call from an account outside of plugin control → this is a security problem (tx.origin) => restriction
 withdrawAddress should be a depositedAddress already used
-Withdraw ? 0 ether function call from an account outside of plugin control → this is a security problem (MITM), but if not from an account outside, how do we pay the gas?
+
 * **persistInMetaMaskDb(key, data)**:
 Store in MetaMask localdb, specific store for plugin
+
 * **readInMetaMaskDb(key) returns data**:
+
 * **communicateWithPlugin(pluginUniqueId, data)**:
 Communicate with another plugin
-* **encrypt(uint index, data) return bytes**
-Request Encryption / Decryption
-* **decrypt(uint index, bytes) return data**
 
+* **encrypt(uint index, data) return bytes**
+Request Encryption
+
+* **decrypt(uint index, bytes) return data**
+Request Decryption
+
+#### plugin interface (for metamask and inpage-provider):
+
+    this.pluginInterface = {
+      actions:[{name: "registerDeposit",
+		call:this.registerDeposit.bind(this),
+		params:[{name: "depositNonce",
+			 type: "uint"},
+		       ]
+		},
+	       {name: "makePayment",
+		call:this.makePayment.bind(this),
+		params:[{name:"toAddress",
+			 type:"address"},
+			{name: "value",
+			 type: "uint"}
+		       ]},
+	       {name: "requestWithdrawPayment",
+		call:this.withdrawPayment.bind(this),
+		params:[{name:"fromAddress",
+			 type:"address"},
+			{name:"latestMessage",
+			 type:"string"}
+		       ]
+	       },
+	       {name: "withdrawPayment",
+		call:this.withdrawPayment.bind(this),
+		params:[{name:"requestWPNonce",
+			 type:"uint"}
+		       ]
+	       },
+	       {name: "requestWithdrawDeposit",
+		call:this.withdrawDeposit.bind(this),
+	       	params:[{name:"amountWithdrawn",
+			 type:"uint"}
+		       ]
+	       },
+	       {name: "withdrawDeposit",
+		call:this.withdrawDeposit.bind(this),
+	       	params:[{name:"requestWDNonce",
+			 type:"uint"
+			}]
+	       }
+	      ],
+      state:[{name: "paymentAllowance",
+	      call: this.paymentAllowance
+	       },
+	     {name: "paymentReceived",
+	      call: this.paymentReceived
+	       }
+	    ]
+    }
+
+    // EIP 712 data
+    this.domain = [
+      { name: "name", type: "string" },
+      { name: "version", type: "string" },
+      { name: "chainId", type: "uint256" },
+      { name: "verifyingContract", type: "address" },
+      { name: "salt", type: "bytes32" },
+    ]
+
+    this.channelMessage = [
+      {name: "nonce", type: "uint256"},
+      {name: "previousSignature", type: "bytes32"},
+      {name: "depositCustomHash", type: "bytes32"},
+      {name: "sender", type: "Accounts"},
+      {name: "recipient1", type: "Accounts"},
+      {name: "recipient2", type: "Accounts"},
+    ]
+    this.accounts = [
+      {name: "address", type: "address"},
+      {name: "balance", type: "uint256"}
+    ]
+    //Todo: chainId use network id
+    this.domainData = {
+      name: "MetaMask Payment Channel Example",
+      version: "1",
+      chainId: this.networkId,
+      verifyingContract: this.address,
+      salt: "0x1"
+    }
+    
+  }
+
+
+#### permissions:
+	
 
 ### for inpage:
+
+
+## basic interface in 
