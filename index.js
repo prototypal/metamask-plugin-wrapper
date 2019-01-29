@@ -1,8 +1,11 @@
 const pluginRegistrar = require('eth-plugin-registrar')
+const pluginScript = require('./examples/dummy-plugin/index')
 
+
+      
 class PluginWrapper {
 
-  constructor (){
+  constructor (opts = {}){
     // this.userAddress = opts.userAddress || '0x0'
     // this.provider = opts.provider
     // const pollingInterval = opts.pollingInterval || 4000
@@ -12,9 +15,10 @@ class PluginWrapper {
     // })
     // this.networkId = opts.networkId
 
-    // const layer2Apps = opts.layer2Apps || []
+    this.plugin = opts.plugin
+    this.pluginScript = pluginScript
 
-    // console.log("Layer2AppTracker: ", layer2Apps)
+    console.log("constructing plugin wrapper for: ", this.plugin)
 
     // this.layer2Apps = layer2Apps.map((layer2AppOpts) => {
     //   const app = this.createLayer2AppFrom(layer2AppOpts)
