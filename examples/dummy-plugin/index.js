@@ -9,6 +9,8 @@
 
 class DummyPlugin  {
   constructor (opts = {}) {
+
+    this.pluginInterface = {}
     // TODO receive state from previous from opts at tracker creation(like balance)
     // this.layer2State = ''
     // this.nodeUrl = opts.nodeUrl

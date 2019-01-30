@@ -41,7 +41,7 @@ to communicate with inpages
 ### for plugin script:
 
 #### crypto:
-* getPluginAccountPubKey(uint index) returns bytes:
+* **getPluginAccountPubKey(uint index)** returns bytes:
 Derive an new account for the plugin (along some specific derivation path) and get public key
 
 Should we allow to specify alternative derivation types and path ?
@@ -56,14 +56,17 @@ m / pluginUniqueId / coin_type' / account' / change / address_index
 * **getPluginAccountsXPub(uint account) returns bytes**:
 returns the extended public key
 
-* **signWithPluginAccount(uint index, bytes dataToSign) returns bytes**:
+* **signWithPluginAccount(uint index, bytes dataToSign, string signMethodType) returns bytes**:
 Sign with a plugin’s account
 this is eth sign ? we should support alternative signing / encryption methods ?
 
-* **requestFunding(address depositAddress, uint suggestedAmount) returns ethTxHash**:
-Request funding from an account outside of plugin control 
+* **requestFunding(address depositAddress, uint suggestedAmount, bytes txData) returns ethTxHash**:
+Request funding from an account outside of plugin control
 User can select account and amount in metamask
 (send Ether tx without tx data)
+how secure is it to include txData
+how do we handle deposits in tokens ERC20 and others ?
+how do dapps recognize who is the depositer if account is different from plugin account (since it's a main metamask account) and if there are no txData (or if txData is already used for ERC20) ?
 
 * **withdrawFromPlugin(address withdrawAddress, bytes txData)**:
 0 ether function call from an account outside of plugin control → this is a security problem (tx.origin) => restriction
