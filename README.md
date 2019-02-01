@@ -86,7 +86,14 @@ Request Encryption
 * **decrypt(uint index, bytes) return data**
 Request Decryption
 
-#### plugin interface (for metamask and inpage-provider):
+#### plugin script variables and functions (for metamask and inpage-provider):
+
+	renderPluginUI()
+	
+	mainBalance :
+	string for plugin balance in ETH
+	
+	(todo: handle other currencies / tokens and also multiple ones ?
 
     this.pluginInterface = {
       actions:[{name: "registerDeposit",

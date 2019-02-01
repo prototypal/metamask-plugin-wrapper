@@ -1,6 +1,7 @@
 const PluginRegistrar = require('eth-plugin-registrar')
-const PluginScript = require('./examples/dummy-plugin/index')
 
+const DummyPluginScript = require('./examples/dummy-plugin/index')
+const CfPluginScript = require('./examples/cf-plugin/index')
 
       
 class PluginWrapper {
@@ -16,7 +17,15 @@ class PluginWrapper {
     // this.networkId = opts.networkId
 
     this.plugin = opts.plugin
-    this.pluginScript = new PluginScript()
+    //    const PluginScript = require('./examples/dummy-plugin/index')
+    console.log(this.plugin.scriptUrl)
+
+    if (this.plugin.scriptUrl == "cf") {
+      this.pluginScript = new CfPluginScript()
+    }
+    else {
+      this.pluginScript = new DummyPluginScript()
+    }
 
     console.log("constructing plugin wrapper for: ", this.plugin)
 

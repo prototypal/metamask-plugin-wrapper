@@ -10,7 +10,7 @@
 class DummyPlugin  {
   constructor () {
 
-    this.mainBalance = 'dummyBalance'
+    this.mainBalance = 'cfBalance'
 
     this.pluginInterface ={
         actions:[{name: "getPubKey",
@@ -19,50 +19,17 @@ class DummyPlugin  {
     			 type: "uint"},
     		       ]
     		 },
-		 {name: "registerDeposit",
-    		call:this.registerDeposit.bind(this),
-    		params:[{name: "depositNonce",
-    			 type: "uint"},
-    		       ]
-    		},
-    	       {name: "makePayment",
-    		call:this.makePayment.bind(this),
-    		params:[{name:"toAddress",
-    			 type:"address"},
-    			{name: "value",
-    			 type: "uint"}
-    		       ]},
-    	       {name: "requestWithdrawPayment",
-    		call:this.withdrawPayment.bind(this),
-    		params:[{name:"fromAddress",
-    			 type:"address"},
-    			{name:"latestMessage",
-    			 type:"string"}
-    		       ]
-    	       },
-    	       {name: "withdrawPayment",
-    		call:this.withdrawPayment.bind(this),
-    		params:[{name:"requestWPNonce",
-    			 type:"uint"}
-    		       ]
-    	       },
-    	       {name: "requestWithdrawDeposit",
-    		call:this.withdrawDeposit.bind(this),
-    	       	params:[{name:"amountWithdrawn",
-    			 type:"uint"}
-    		       ]
-    	       },
-    	       {name: "withdrawDeposit",
+    	       {name: "install",
     		call:this.withdrawDeposit.bind(this),
     	       	params:[{name:"requestWDNonce",
     			 type:"uint"
     			}]
     	       }
     	      ],
-      state:[{name: "paymentAllowance",
+      state:[{name: "balance",
     	      call: this.paymentAllowance
     	       },
-    	     {name: "paymentReceived",
+    	     {name: "balance2",
     	      call: this.paymentReceived
     	       }
     	    ]
