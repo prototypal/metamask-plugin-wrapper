@@ -1,5 +1,5 @@
-const pluginRegistrar = require('eth-plugin-registrar')
-const pluginScript = require('./examples/dummy-plugin/index')
+const PluginRegistrar = require('eth-plugin-registrar')
+const PluginScript = require('./examples/dummy-plugin/index')
 
 
       
@@ -16,7 +16,7 @@ class PluginWrapper {
     // this.networkId = opts.networkId
 
     this.plugin = opts.plugin
-    this.pluginScript = pluginScript
+    this.pluginScript = new PluginScript()
 
     console.log("constructing plugin wrapper for: ", this.plugin)
 

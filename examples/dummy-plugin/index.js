@@ -8,9 +8,66 @@
 
 
 class DummyPlugin  {
-  constructor (opts = {}) {
+  constructor () {
 
-    this.pluginInterface = {}
+    this.test = 'AA'
+
+    this.pluginInterface ={
+        actions:[{name: "getPubKey",
+    		call:this.getPubKey.bind(this),
+    		params:[{name: "accountIndex",
+    			 type: "uint"},
+    		       ]
+    		 },
+		 {name: "registerDeposit",
+    		call:this.registerDeposit.bind(this),
+    		params:[{name: "depositNonce",
+    			 type: "uint"},
+    		       ]
+    		},
+    	       {name: "makePayment",
+    		call:this.makePayment.bind(this),
+    		params:[{name:"toAddress",
+    			 type:"address"},
+    			{name: "value",
+    			 type: "uint"}
+    		       ]},
+    	       {name: "requestWithdrawPayment",
+    		call:this.withdrawPayment.bind(this),
+    		params:[{name:"fromAddress",
+    			 type:"address"},
+    			{name:"latestMessage",
+    			 type:"string"}
+    		       ]
+    	       },
+    	       {name: "withdrawPayment",
+    		call:this.withdrawPayment.bind(this),
+    		params:[{name:"requestWPNonce",
+    			 type:"uint"}
+    		       ]
+    	       },
+    	       {name: "requestWithdrawDeposit",
+    		call:this.withdrawDeposit.bind(this),
+    	       	params:[{name:"amountWithdrawn",
+    			 type:"uint"}
+    		       ]
+    	       },
+    	       {name: "withdrawDeposit",
+    		call:this.withdrawDeposit.bind(this),
+    	       	params:[{name:"requestWDNonce",
+    			 type:"uint"
+    			}]
+    	       }
+    	      ],
+      state:[{name: "paymentAllowance",
+    	      call: this.paymentAllowance
+    	       },
+    	     {name: "paymentReceived",
+    	      call: this.paymentReceived
+    	       }
+    	    ]
+    }
+    
     // TODO receive state from previous from opts at tracker creation(like balance)
     // this.layer2State = ''
     // this.nodeUrl = opts.nodeUrl
@@ -31,55 +88,6 @@ class DummyPlugin  {
 
     // this.networkId = opts.networkId
 
-    // this.layer2Abi = {
-    //   actions:[{name: "registerDeposit",
-    // 		call:this.registerDeposit.bind(this),
-    // 		params:[{name: "depositNonce",
-    // 			 type: "uint"},
-    // 		       ]
-    // 		},
-    // 	       {name: "makePayment",
-    // 		call:this.makePayment.bind(this),
-    // 		params:[{name:"toAddress",
-    // 			 type:"address"},
-    // 			{name: "value",
-    // 			 type: "uint"}
-    // 		       ]},
-    // 	       {name: "requestWithdrawPayment",
-    // 		call:this.withdrawPayment.bind(this),
-    // 		params:[{name:"fromAddress",
-    // 			 type:"address"},
-    // 			{name:"latestMessage",
-    // 			 type:"string"}
-    // 		       ]
-    // 	       },
-    // 	       {name: "withdrawPayment",
-    // 		call:this.withdrawPayment.bind(this),
-    // 		params:[{name:"requestWPNonce",
-    // 			 type:"uint"}
-    // 		       ]
-    // 	       },
-    // 	       {name: "requestWithdrawDeposit",
-    // 		call:this.withdrawDeposit.bind(this),
-    // 	       	params:[{name:"amountWithdrawn",
-    // 			 type:"uint"}
-    // 		       ]
-    // 	       },
-    // 	       {name: "withdrawDeposit",
-    // 		call:this.withdrawDeposit.bind(this),
-    // 	       	params:[{name:"requestWDNonce",
-    // 			 type:"uint"
-    // 			}]
-    // 	       }
-    // 	      ],
-    //   state:[{name: "paymentAllowance",
-    // 	      call: this.paymentAllowance
-    // 	       },
-    // 	     {name: "paymentReceived",
-    // 	      call: this.paymentReceived
-    // 	       }
-    // 	    ]
-    // }
 
     // // EIP 712 data
     // this.domain = [
@@ -271,6 +279,10 @@ class DummyPlugin  {
 	})
       }
     })
+  }
+
+  getPubKey(params){
+    console.log(params)
   }
 
   withdrawPayment(params){
