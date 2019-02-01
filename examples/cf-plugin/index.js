@@ -88,6 +88,12 @@ class DummyPlugin  {
     
   }
 
+  //should be transformed to be able to pass html code
+  renderUI(){
+    return("plugin UI CF")
+  }
+
+  
   async registerDeposit(params){
     const socket = this.socket
     console.log("REGISTER DEPOSIT ", params)

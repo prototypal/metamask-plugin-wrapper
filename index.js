@@ -1,4 +1,4 @@
-const PluginRegistrar = require('eth-plugin-registrar')
+//const PluginRegistrar = require('eth-plugin-registrar')
 
 const DummyPluginScript = require('./examples/dummy-plugin/index')
 const CfPluginScript = require('./examples/cf-plugin/index')
@@ -8,23 +8,27 @@ class PluginWrapper {
 
   constructor (opts = {}){
     // this.userAddress = opts.userAddress || '0x0'
-    // this.provider = opts.provider
+    this.provider = opts.provider
     // const pollingInterval = opts.pollingInterval || 4000
     // this.blockTracker = new BlockTracker({
     //   provider: this.provider,
     //   pollingInterval,
     // })
-    // this.networkId = opts.networkId
+    this.networkId = opts.networkId
 
     this.plugin = opts.plugin
-    //    const PluginScript = require('./examples/dummy-plugin/index')
-    console.log(this.plugin.scriptUrl)
 
     if (this.plugin.scriptUrl == "cf") {
-      this.pluginScript = new CfPluginScript()
+      this.pluginScript = new CfPluginScript({
+	provider: this.provider,
+	networkId: this.networkId
+      })
     }
     else {
-      this.pluginScript = new DummyPluginScript()
+      this.pluginScript = new DummyPluginScript({
+	provider: this.provider,
+	networkId: this.networkId	
+      })
     }
 
     console.log("constructing plugin wrapper for: ", this.plugin)
