@@ -1,4 +1,3 @@
-const Eth = require('ethjs-query')
 // const EthContract = require('ethjs-contract')
 // const ioClient = require('socket.io-client')
 // const BN = require('ethereumjs-util').BN
@@ -36,7 +35,6 @@ class DummyPlugin  {
     }
 
     this.provider = opts.provider
-    this.eth = new Eth(this.provider)
 
     this.networkId = opts.networkId
 
@@ -80,13 +78,12 @@ class DummyPlugin  {
   }
 		
   async getPubKey(){
-    console.log("dummy plugin getPubKey")
     console.log(this.provider)
-    this.provider.approve
-    await this.eth.rpc.sendAsync(
+    console.log("dummy plugin getPubKey")
+    await this.provider.sendAsync(
       {
 	method: "getPubKey",
-	params: [],
+	params: ["test"],
       }, function(err, result){
 	console.log("dummy plugin received answer getPubKey", err, result)
       }
@@ -107,7 +104,7 @@ class DummyPlugin  {
       message: message
     })
 
-    await this.eth.rpc.sendAsync(
+    await this.provider.sendAsync(
       {
 	method: "eth_signTypedData_v3",
 	params: [fromAccount, data],

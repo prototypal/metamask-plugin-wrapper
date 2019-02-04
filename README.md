@@ -41,17 +41,34 @@ to communicate with inpages
 ### for plugin script:
 
 #### crypto:
+
+
+
+json rpc method middleware
+
+
 * **getPluginAccountPubKey(uint index)** returns bytes:
 Derive an new account for the plugin (along some specific derivation path) and get public key
 
 Should we allow to specify alternative derivation types and path ?
 we use BIP32 and BIP44 and some custom path
 
+
 key types (selected on installation):
-bip44 extension (eth not allowed)
+
+for cryptocurrencies' plugins: bip44 extension (eth not allowed)
 m / purpose' / coin_type' / account' / change / address_index
-plugin derivation key
+
+or 
+
+for apps/plugins derivation key
 m / pluginUniqueId / coin_type' / account' / change / address_index
+
+App keys and not plugin keys
+(by domain)
+implement in keyring these specific account separetely
+
+
 
 * **getPluginAccountsXPub(uint account) returns bytes**:
 returns the extended public key
