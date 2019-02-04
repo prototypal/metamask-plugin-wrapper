@@ -34,7 +34,6 @@ class DummyPlugin  {
     	       }
     	    ]
     }
-    
 
     this.provider = opts.provider
     this.eth = new Eth(this.provider)
@@ -80,8 +79,18 @@ class DummyPlugin  {
     })
   }
 		
-  getPubKey(params){
-    console.log(params)
+  async getPubKey(){
+    console.log("dummy plugin getPubKey")
+    console.log(this.provider)
+    this.provider.approve
+    await this.eth.rpc.sendAsync(
+      {
+	method: "getPubKey",
+	params: [],
+      }, function(err, result){
+	console.log("dummy plugin received answer getPubKey", err, result)
+      }
+    )
   }
 
   async signTypedMessage(message, fromAccount, cb){

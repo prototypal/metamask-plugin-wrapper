@@ -7,20 +7,27 @@
 // const abi = paymentChannel.abi
 
 
-class DummyPlugin  {
+class CfPlugin  {
   constructor () {
 
     this.mainBalance = 'cfBalance'
 
     this.pluginInterface ={
-        actions:[{name: "getPubKey",
-    		call:this.getPubKey.bind(this),
+        actions:[{name: "sign",
+    		call:this.signMessage.bind(this),
     		params:[{name: "accountIndex",
     			 type: "uint"},
     		       ]
     		 },
+		 {name: "testFunction",
+    		call:this.signMessage.bind(this),
+    		params:[{name: "accountIndex",
+    			 type: "uint"},
+    		       ]
+    		 },
+		 
     	       {name: "install",
-    		call:this.withdrawDeposit.bind(this),
+    		call:this.signMessage.bind(this),
     	       	params:[{name:"requestWDNonce",
     			 type:"uint"
     			}]
@@ -165,112 +172,6 @@ class DummyPlugin  {
   }
 		
   
-  makePayment(params){
-    console.log("MAKE PAYMENT")
-    console.log(params)
-    let toAddress = params[0].toLowerCase()
-    let value = params[1]*1e18
-    console.log("DEBUGDEBUG before BN")    
-    console.log(value)
-    value = new BN(value.toString(), 10)
-    console.log("DEBUGDEBUG in BN")
-    console.log(value)
-    console.log(value.toString(10))    
-    console.log(typeof(value))    
-//    value = value.mul(new BN(10, 10).pow(new BN(18)))
-    const socket = this.socket
-    socket.emit("getLatestMessageInfo", this.owner, async (previousSignature)=>{
-      console.log("GETTING PREVIOUS SIG FROM USER")
-      console.log(previousSignature)
-      let message
-      let socketEvent
-      if (previousSignature == "0x0"){
-	// first action must be register deposit
-	return
-      }
-      else {
-	
-	socket.emit("getMessageBySignature", previousSignature, async (previousMessage)=>{
-	  console.log("PREVIOUS MESSAGE FROM USER")
-	  console.log(previousMessage)
-
-	  // TODO BN nonces
-	  message = previousMessage
-	  console.log(message)
-	  console.log(message.nonce)
-	  console.log(typeof(message.nonce))
-	  message.nonce = message.nonce + 1
-	  console.log(message.nonce)
-	  console.log(typeof(message.nonce))
-	  message.previousSignature = previousSignature
-	  message.depositCustomHash = "0x0"
-	  let previousValue = message.sender.balance
-	  previousValue = new BN(previousValue, 16)
-	  console.log("PREVIOUS VALUE", previousValue)
-	  if (previousValue.lt(value)){
-	    alert("not enough available deposit")
-	    return
-	  }
-	  message.sender.balance = previousValue.sub(value).toJSON()
-	  let previousRecipientValue
-	  if (message.recipient1){
-	    if (message.recipient1.address == toAddress){
-	      previousRecipientValue = new BN(message.recipient1.value, 16)
-	      message.recipient1.value = previousRecipientValue.add(value).toJSON()
-	    }
-	    else{
-	      if (message.recipient2 && message.recipient2.address){
-		if (message.recipient2.address == toAddress){
-		  previousRecipientValue = new BN(message.recipient2.value, 16)
-		  message.recipient2.value = previousRecipientValue.add(value).toJSON()
-		}
-		else {
-		  alert("Can't send to more than 2 recipients for now")
-		}
-	      }
-	      else{
-		message.recipient2 = {
-		  address: toAddress,
-		  value: value.toJSON()
-		}
-	      }
-	    }
-	  }
-	  else {
-	    message.recipient1 = {
-	      address: toAddress,
-	      value: value.toJSON()
-	    }
-	  }
-    	  this.signMessage(message, (signature)=>{
-	    socketEvent = "makePayment"
-	    console.log(socketEvent + " will be fired ", message, signature)
-	    socket.emit(socketEvent, message, signature, ()=> {
-	      console.log(socketEvent + " fired ", message, signature)
-	    })
-	  })
-	})
-      }
-    })
-  }
-
-  getPubKey(params){
-    console.log(params)
-  }
-
-  withdrawPayment(params){
-    console.log(params)
-    this.socket.emit("withdrawPayment")
-  }
-
-  withdrawDeposit(params){
-    console.log(params)    
-    this.socket.emit("withdrawDeposit")
-  }
-  
-  getLayer2AppContract() {
-    return this.contract
-  }
 
   async signMessage(message, cb){
     let socket = this.socket
@@ -365,4 +266,4 @@ class DummyPlugin  {
   
 }
 
-module.exports = DummyPlugin
+module.exports = CfPlugin
