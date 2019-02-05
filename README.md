@@ -207,17 +207,31 @@ Request Decryption
 # TODO
 
 [] determine further the API
+
+[]
+
 [] create new provider for each plugin
+
 [] 
+
 [] Create new keyring type?
+
 [] 
+
 [] handle ERC20/non fungible deposits
+
 []
+
 []
+
 []
+
 []
+
 [] ETHcc talk
+
 [] ETHcc API references and discussion links/forum (github issues?)
+
 [] EIP on app keys
 
 
