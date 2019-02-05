@@ -201,4 +201,29 @@ Request Decryption
 ### for inpage:
 
 
-## basic interface in 
+### basic interface in metamask
+
+
+# TODO
+
+[] determine further the API
+[] create new provider for each plugin
+[] 
+[] Create new keyring type?
+[] 
+[] handle ERC20/non fungible deposits
+[]
+[]
+[]
+[]
+[] ETHcc talk
+[] ETHcc API references and discussion links/forum (github issues?)
+[] EIP on app keys
+
+
+# Notes
+
+
+- uses https://github.com/Bunjin/metamask-app-keyring
+- eip on app / domain keys
+- discussions on plugin api specs
