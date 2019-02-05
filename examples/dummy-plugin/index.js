@@ -12,28 +12,36 @@ class DummyPlugin  {
     this.mainBalance = 'dummyBalance'
     this.renderUI = this.renderUI.bind(this)
     this.pluginInterface ={
-        actions:[{name: "getPubKey",
-    		call:this.getPubKey.bind(this),
-    		params:[{name: "accountIndex",
-    			 type: "uint"},
-    		       ]
+        actions:[{name: "registerHdPath",
+    		  call:this.registerHdPath.bind(this),
+    		  params:[{name: "hdPath",
+    			   type: "string"},
+    			 ]
+    		 },
+		 {name: "getPubKey",
+    		  call:this.getPubKey.bind(this),
+    		  params:[{name: "hdPath",
+			   type: "string"},
+			  {name: "accountIndex",
+    			   type: "uint"},
+    			 ]
     		 },
 		 {name: "signMessage",
-    		call:this.signMessage.bind(this),
-    		params:[{name: "message",
-    			 type: "string"},
-    		       ]
-    		},
-    	      ],
+    		  call:this.signMessage.bind(this),
+    		  params:[{name: "message",
+    			   type: "string"},
+    			 ]
+    		 },
+    		],
       state:[{name: "paymentAllowance",
     	      call: this.paymentAllowance
-    	       },
+    	     },
     	     {name: "paymentReceived",
     	      call: this.paymentReceived
-    	       }
+    	     }
     	    ]
     }
-
+    
     this.provider = opts.provider
 
     this.networkId = opts.networkId
@@ -59,6 +67,9 @@ class DummyPlugin  {
       verifyingContract: this.address,
       salt: "0x1"
     }
+
+    console.log(opts)
+    this.api = opts.api
     
   }
 
@@ -77,17 +88,14 @@ class DummyPlugin  {
     })
   }
 		
-  async getPubKey(){
-    console.log(this.provider)
-    console.log("dummy plugin getPubKey")
-    await this.provider.sendAsync(
-      {
-	method: "getPubKey",
-	params: ["test"],
-      }, function(err, result){
-	console.log("dummy plugin received answer getPubKey", err, result)
-      }
-    )
+  async registerHdPath(params){
+    console.log("dummy plugin registerHdPath", params)
+    this.api.registerHdPath(params)
+  }
+
+  async getPubKey(params){
+    console.log("dummy plugin getPubKey", params)
+    this.api.getPubKey(params)
   }
 
   async signTypedMessage(message, fromAccount, cb){

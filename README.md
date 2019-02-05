@@ -208,9 +208,9 @@ Request Decryption
 
 [] determine further the API
 
-[]
+[] provider, determine if we need to pass it to the plugin from the wrapper. if so, then we need to secure the rpc calls such that we don't give access to some of them
 
-[] create new provider for each plugin
+[] create new provider for each plugin wrapper
 
 [] 
 
@@ -238,6 +238,7 @@ Request Decryption
 # Notes
 
 
-- uses https://github.com/Bunjin/metamask-app-keyring
+- uses keyringcontroller and eth-hd-keyring plugin-system branches
 - eip on app / domain keys
 - discussions on plugin api specs
+- secure the rpc calls of the new methods (stop passing provider to plugins and also disallow other origins to use these rpc calls with some "fake" params)
