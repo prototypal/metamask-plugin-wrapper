@@ -7,6 +7,16 @@ Implements the message API communications
 Will inject the plugin functions and state into visited webpages
 Will be ran in metamask extension background page
 
+## Setup
+
+use plugin-system branches of:
+* metamask-extension
+* eth-keyring-controller
+* eth-hd-keyring
+
+and master of:
+* metamask-plugin-wrapper
+
 ## Parameters
 
 * author eth address
@@ -47,7 +57,8 @@ to communicate with inpages
 json rpc method middleware
 
 
-* **getPluginAccountPubKey(uint index)** returns bytes:
+* **getPubKey(string hdPath, uint index)** returns bytes:
+hdPath: customise the app key path (and can use several), should be formatted as uint/uint/uint (can be extended as much as one likes)
 Derive an new account for the plugin (along some specific derivation path) and get public key
 
 Should we allow to specify alternative derivation types and path ?
@@ -112,54 +123,37 @@ Request Decryption
 	
 	(todo: handle other currencies / tokens and also multiple ones ?
 
-    this.pluginInterface = {
-      actions:[{name: "registerDeposit",
-		call:this.registerDeposit.bind(this),
-		params:[{name: "depositNonce",
-			 type: "uint"},
-		       ]
-		},
-	       {name: "makePayment",
-		call:this.makePayment.bind(this),
-		params:[{name:"toAddress",
-			 type:"address"},
-			{name: "value",
-			 type: "uint"}
-		       ]},
-	       {name: "requestWithdrawPayment",
-		call:this.withdrawPayment.bind(this),
-		params:[{name:"fromAddress",
-			 type:"address"},
-			{name:"latestMessage",
-			 type:"string"}
-		       ]
-	       },
-	       {name: "withdrawPayment",
-		call:this.withdrawPayment.bind(this),
-		params:[{name:"requestWPNonce",
-			 type:"uint"}
-		       ]
-	       },
-	       {name: "requestWithdrawDeposit",
-		call:this.withdrawDeposit.bind(this),
-	       	params:[{name:"amountWithdrawn",
-			 type:"uint"}
-		       ]
-	       },
-	       {name: "withdrawDeposit",
-		call:this.withdrawDeposit.bind(this),
-	       	params:[{name:"requestWDNonce",
-			 type:"uint"
-			}]
-	       }
-	      ],
+
+	// example plugin interface
+    this.pluginInterface ={
+        actions:[{name: "registerHdPath",
+    		  call:this.registerHdPath.bind(this),
+    		  params:[{name: "hdPath",
+    			   type: "string"},
+    			 ]
+    		 },
+		 {name: "getPubKey",
+    		  call:this.getPubKey.bind(this),
+    		  params:[{name: "hdPath",
+			   type: "string"},
+			  {name: "accountIndex",
+    			   type: "uint"},
+    			 ]
+    		 },
+		 {name: "signMessage",
+    		  call:this.signMessage.bind(this),
+    		  params:[{name: "message",
+    			   type: "string"},
+    			 ]
+    		 },
+    		],
       state:[{name: "paymentAllowance",
-	      call: this.paymentAllowance
-	       },
-	     {name: "paymentReceived",
-	      call: this.paymentReceived
-	       }
-	    ]
+    	      call: this.paymentAllowance
+    	     },
+    	     {name: "paymentReceived",
+    	      call: this.paymentReceived
+    	     }
+    	    ]
     }
 
     // EIP 712 data
@@ -220,7 +214,7 @@ Request Decryption
 
 [] handle ERC20/non fungible deposits
 
-[]
+[x] allow for more customization of hdPath
 
 []
 
@@ -238,7 +232,7 @@ Request Decryption
 # Notes
 
 
-- uses keyringcontroller and eth-hd-keyring plugin-system branches
+- uses metamask/keyringcontroller and metamask/eth-hd-keyring, plugin-system branches
 - eip on app / domain keys
 - discussions on plugin api specs
 - secure the rpc calls of the new methods (stop passing provider to plugins and also disallow other origins to use these rpc calls with some "fake" params)

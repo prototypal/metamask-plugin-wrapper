@@ -1,26 +1,18 @@
-// const EthContract = require('ethjs-contract')
-// const ioClient = require('socket.io-client')
-// const BN = require('ethereumjs-util').BN
-
-// const paymentChannel = require("./build/contracts/PaymentChannel.json")
-// const abi = paymentChannel.abi
-
-
 class DummyPlugin  {
   constructor (opts = {}) {
 
     this.mainBalance = 'dummyBalance'
     this.renderUI = this.renderUI.bind(this)
     this.pluginInterface ={
-        actions:[{name: "registerHdPath",
-    		  call:this.registerHdPath.bind(this),
-    		  params:[{name: "hdPath",
+        actions:[{name: "getXPubKey",
+    		  call:this.getXPubKey.bind(this),
+    		  params:[{name: "subHdPath",
     			   type: "string"},
     			 ]
     		 },
 		 {name: "getPubKey",
     		  call:this.getPubKey.bind(this),
-    		  params:[{name: "hdPath",
+    		  params:[{name: "subHdPath",
 			   type: "string"},
 			  {name: "accountIndex",
     			   type: "uint"},
@@ -88,11 +80,11 @@ class DummyPlugin  {
     })
   }
 		
-  async registerHdPath(params){
-    console.log("dummy plugin registerHdPath", params)
-    this.api.registerHdPath(params)
+  async getXPubKey(params){
+    console.log("dummy plugin getXPubKey", params)
+    this.api.getXPubKey(params)
   }
-
+  
   async getPubKey(params){
     console.log("dummy plugin getPubKey", params)
     this.api.getPubKey(params)
@@ -136,39 +128,39 @@ class DummyPlugin  {
     )
   }
 
-  async updateValue(key) {
-    console.log("updateValue", key)
-    let methodName
-    let args = []
+  // async updateValue(key) {
+  //   console.log("updateValue", key)
+  //   let methodName
+  //   let args = []
 
-    switch (key) {
-      case 'balance':
-        methodName = 'balanceOf'
-        args = [ this.owner ]
-        break
-      default:
-        methodName = key
-    }
+  //   switch (key) {
+  //     case 'balance':
+  //       methodName = 'balanceOf'
+  //       args = [ this.owner ]
+  //       break
+  //     default:
+  //       methodName = key
+  //   }
 
-    let result
-    try {
-      console.log(args)
-      result = await this.contract[methodName](...args)
-    } catch (e) {
-      console.warn(`failed to load ${key} for layer2App at ${this.address}`)
-      if (key === 'balance') {
-        throw e
-      }
-    }
+  //   let result
+  //   try {
+  //     console.log(args)
+  //     result = await this.contract[methodName](...args)
+  //   } catch (e) {
+  //     console.warn(`failed to load ${key} for layer2App at ${this.address}`)
+  //     if (key === 'balance') {
+  //       throw e
+  //     }
+  //   }
 
-    if (result) {
-      const val = result[0]
-      this[key] = val
-      return val
-    }
+  //   if (result) {
+  //     const val = result[0]
+  //     this[key] = val
+  //     return val
+  //   }
 
-    return this[key]
-  }
+  //   return this[key]
+  // }
 
 
   

@@ -29,7 +29,7 @@ class PluginWrapper {
     // we really want the plugin to have access to read call form the provider, so maybe a subset onlys 
     this.api = {
       getPubKey: this.getPubKey.bind(this),
-      registerHdPath: this.registerHdPath.bind(this),
+      getXPubKey: this.getXPubKey.bind(this),
     }
     
     if (this.plugin.scriptUrl == "cf") {
@@ -52,11 +52,11 @@ class PluginWrapper {
   }
 
 
-  async registerHdPath(params){
-    console.log("dummy plugin registerHdPath", params)
+  async getXPubKey(params){
+    console.log("dummy plugin getXPubKey", params)
     await this.provider.sendAsync(
       {
-	method: "registerHdPath",
+	method: "getXPubKey",
 	params: params,
       }, function(err, result){
 	console.log("dummy plugin received answer", err, result)
@@ -67,10 +67,14 @@ class PluginWrapper {
 
   async getPubKey(params){
     console.log("dummy plugin getPubKey", params)
+    const hdPath = "m/" + this.plugin.authorAddress +"/"  + params[0]
+    const index = params[1]
+    const newParams = [hdPath, index]
+    console.log(newParams)
     await this.provider.sendAsync(
       {
 	method: "getPubKey",
-	params: params,
+	params: newParams,
       }, function(err, result){
 	console.log("dummy plugin received answer getPubKey", err, result)
       }
