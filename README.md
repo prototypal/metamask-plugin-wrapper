@@ -71,6 +71,8 @@ json rpc method middleware
 
 * **getPubKey(string hdPath, uint index)** returns bytes:
 hdPath: customise the app key path (and can use several), should be formatted as uint/uint/uint (can be extended as much as one likes)
+with uint under 0x80000000
+can also be hardened using '
 Derive an new account for the plugin (along some specific derivation path) and get public key
 
 Should we allow to specify alternative derivation types and path ?
@@ -91,10 +93,24 @@ App keys and not plugin keys
 (by domain)
 implement in keyring these specific account separetely
 
+I currently assign the first path of the hdPath using the plugin eth address (authorAddress) and the I let the plugin's code add any extra subPath to this. and then he can add an account index.
+So for example it would be:
+// plugin eth author address
+ // 0x37a962652fcb752ae373feb022dd2882a9348b79
+ // 37a9 6265 2fcb 752a e373 feb0 22dd 2882 a934 8b79
+`m/14249/25189/12235/29994/58227/65200/8925/10370/ index_customisable_by_plugin/index_customisable_by_plugin/index_customisable_by_plugin.../index_customisable_by_plugin/ account index`
+
+the `index_customisable_by_plugin/.../index_customisable_by_plugin` part is just a string but it needs to follow the same rules as bip32
 
 
 * **getXPubKey() returns bytes**:
 returns the extended public key of the keyring
+
+the same extendedPublicKey using ethereumjs-wallet/hdkey, no matter the path I choose
+one mnemonic = one extended public key for all hdPaths
+that means some privacy will be leaked accross plugins
+as long as one can guess the hdPath used by the other plugins, one can track the accounts of an user
+
 
 * **signWithPluginAccount(uint index, bytes dataToSign, string signMethodType) returns bytes**:
 Sign with a plugin’s account
@@ -228,7 +244,7 @@ Request Decryption
 
 [x] allow for more customization of hdPath
 
-[]
+[] solve privacy issue with xpubkey
 
 []
 

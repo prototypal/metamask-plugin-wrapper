@@ -6,9 +6,7 @@ class DummyPlugin  {
     this.pluginInterface ={
         actions:[{name: "getXPubKey",
     		  call:this.getXPubKey.bind(this),
-    		  params:[{name: "subHdPath",
-    			   type: "string"},
-    			 ]
+    		  params:[]
     		 },
 		 {name: "getPubKey",
     		  call:this.getPubKey.bind(this),

@@ -64,7 +64,9 @@ class PluginWrapper {
     )
   }
 
-  // 0x 37a9 6265 2fcb 752a e373 feb0 22dd 2882 a934 8b79
+  // 0x37a962652fcb752ae373feb022dd2882a9348b79
+  // 37a9 6265 2fcb 752a e373 feb0 22dd 2882 a934 8b79
+  // m/14249/25189/12235/29994/58227/65200/8925/10370/2
   splitAuthorAddress(authorAddress) {
     console.log(typeof(authorAddress))
     let subPath = ""
