@@ -20,6 +20,8 @@ and develop of:
 * metamask-plugin-wrapper
 
 run `nvm use v8.13` in each folder
+run `npm i` in each folder
+
 run `npm link` in all folders except metamask-extension
 run `npm link eth-keyring-controller` in metamask-extension
 run `npm link eth-hd-keyring` in metamask-extension
