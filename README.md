@@ -9,12 +9,14 @@ Will be ran in metamask extension background page
 
 ## Setup
 
+clone and
+
 use plugin-system branches of:
 * metamask-extension
 * eth-keyring-controller
 * eth-hd-keyring
 
-and master of:
+and develop of:
 * metamask-plugin-wrapper
 
 run `nvm use v8.13` in each folder
