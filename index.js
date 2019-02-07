@@ -67,7 +67,7 @@ class PluginWrapper {
 
   async getPubKey(params){
     console.log("dummy plugin getPubKey", params)
-    const hdPath = "m/" + this.plugin.authorAddress +"/"  + params[0]
+    const hdPath = "m/" + parseInt(this.plugin.authorAddress, 16) +"/"  + params[0]
     const index = params[1]
     const newParams = [hdPath, index]
     console.log(newParams)

@@ -81,8 +81,8 @@ implement in keyring these specific account separetely
 
 
 
-* **getPluginAccountsXPub(uint account) returns bytes**:
-returns the extended public key
+* **getXPubKey() returns bytes**:
+returns the extended public key of the keyring
 
 * **signWithPluginAccount(uint index, bytes dataToSign, string signMethodType) returns bytes**:
 Sign with a plugin’s account
