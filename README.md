@@ -228,23 +228,17 @@ Request Decryption
 
 # TODO
 
-[] Replace authorAddress by plugin's name ens hash: pluginUID
-
-[] determine further the API
-
 [] provider, determine if we need to pass it to the plugin from the wrapper. if so, then we need to secure the rpc calls such that we don't give access to some of them
 
-[] create new provider for each plugin wrapper
+[] if so, create new provider for each plugin wrapper
 
-[] 
+[] research if we need to harden some indexes
 
-[] Create new keyring type?
+[] check xpub key with hardened path indexes
 
-[] 
+[] how to handle bip44 plugins - create a plugin's type?
 
 [] handle ERC20/non fungible deposits
-
-[x] allow for more customization of hdPath
 
 [] solve privacy issue with xpubkey
 
