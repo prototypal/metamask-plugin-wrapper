@@ -66,14 +66,13 @@ class PluginWrapper {
 
   // 0x37a962652fcb752ae373feb022dd2882a9348b79
   // 37a9 6265 2fcb 752a e373 feb0 22dd 2882 a934 8b79
-  // m/14249/25189/12235/29994/58227/65200/8925/10370/2
-  splitAuthorAddress(authorAddress) {
-    console.log(typeof(authorAddress))
+  // m/14249/25189/12235/29994/58227/65200/8925/10370/43316/35705
+  splitUid(uid) {
     let subPath = ""
-    for (let k = 0; k < 8; k++) {
+    for (let k = 0; k < 10; k++) {
 
-      subPath  += parseInt(authorAddress.slice(4*k+2, 4*(k+1)+2), 16)
-      if (k != 7) {
+      subPath  += parseInt(uid.slice(4*k+2, 4*(k+1)+2), 16)
+      if (k != 9) {
 	subPath += "/"
       }
     }
@@ -85,8 +84,8 @@ class PluginWrapper {
     console.log("dummy plugin getPubKey", params)
     // there is a limit on index values, var HARDENED_OFFSET = 0x80000000
     // for the index derived from the authorAddress we need to find a way to split it
-    const authorAddressSubPath = this.splitAuthorAddress(this.plugin.authorAddress)
-    const hdPath = "m/" + authorAddressSubPath +"/"  + params[0]
+    const uidSubPath = this.splitUid(this.plugin.uid)
+    const hdPath = "m/" + uidSubPath +"/"  + params[0]
     const index = params[1]
     const newParams = [hdPath, index]
     console.log(newParams)
