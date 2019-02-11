@@ -8,7 +8,7 @@ class DummyPlugin  {
     		  call:this.getXPubKey.bind(this),
     		  params:[]
     		 },
-		 {name: "getPubKey",
+		 {name: "getPubKeyAppAccount",
     		  call:this.getPubKey.bind(this),
     		  params:[{name: "subHdPath",
 			   type: "string"},
@@ -16,18 +16,36 @@ class DummyPlugin  {
     			   type: "uint"},
     			 ]
     		 },
-		 {name: "signMessage",
-    		  call:this.signMessage.bind(this),
+		 {name: "sendTransactionAppKey",
+    		  call:this.signTransactionAppKey.bind(this),
+    		  params:[{name: "from",
+    			   type: "string"},
+			  {name: "to",
+			   type: "string"},
+			  {name: "value",
+    			   type: "uint"},			  
+    			 ]
+    		 },
+		 {name: "sendFromMainAccount",
+    		  call:this.sendFromMainAccount.bind(this),
+    		  params:[{name: "to",
+    			   type: "string"},			  
+			  {name: "amount_wei",
+    			   type: "uint"},			  
+    			 ]
+    		 },
+		 {name: "signMessageFromMainAccount",
+    		  call:this.signMessageFromMainAccount.bind(this),
     		  params:[{name: "message",
     			   type: "string"},
     			 ]
     		 },
     		],
-      state:[{name: "paymentAllowance",
-    	      call: this.paymentAllowance
+      state:[{name: "dummyState",
+    	      call: this.balance
     	     },
-    	     {name: "paymentReceived",
-    	      call: this.paymentReceived
+    	     {name: "dummyState2",
+    	      call: this.balance2
     	     }
     	    ]
     }
@@ -35,6 +53,7 @@ class DummyPlugin  {
     this.provider = opts.provider
 
     this.networkId = opts.networkId
+    this.mainAccount = opts.selectedAccount
 
     // // EIP 712 data
     this.domain = [
@@ -55,7 +74,7 @@ class DummyPlugin  {
       version: "1",
       chainId: this.networkId,
       verifyingContract: this.address,
-      salt: "0x1"
+      salt: "0x12345611111111111"
     }
 
     console.log(opts)
@@ -67,13 +86,13 @@ class DummyPlugin  {
     return("plugin UI a")
   }
 
-  async signMessage(params){
+  async signMessageFromMainAccount(params){
     console.log(params)
     let message  = {
 	  nonce: 0,
 	  data: "test message"
 	}
-    this.signTypedMessage(message, "0x6cCB1DEf4Ff8C4b953B084a220ec51817B65fD87", (signature)=>{
+    this.signTypedMessageFromMainAccount(message, this.mainAccount, (signature)=>{
       console.log("signed", message, signature)	
     })
   }
@@ -88,7 +107,38 @@ class DummyPlugin  {
     this.api.getPubKey(params)
   }
 
-  async signTypedMessage(message, fromAccount, cb){
+  async signTransactionAppKey(params){
+    this.api.signTransactionAppKey(params)    
+  }
+
+  async sendFromMainAccount(params) {
+    //console.log(params[0], params[1], this.mainAccount)
+    const from = "0x6cCB1DEf4Ff8C4b953B084a220ec51817B65fD87"
+    let txParams = {
+      "from": this.mainAccount,
+      "to": params[0],
+      "gas": "0x76c0", // 30400
+      "gasPrice": "0x9184e72a", 
+      "value": params[1],
+      "data": "0x"
+    }
+    
+    await this.provider.sendAsync(
+      {
+	method: "eth_sendTransaction",
+	params: [txParams],
+      },
+      function(err, result) {
+    	if (err) {
+          return console.error(err);
+    	}
+	console.log(result)
+	cb(result)
+      }
+    )
+    
+  }
+  async signTypedMessageFromMainAccount(message, fromAccount, cb){
     console.log(message)
     console.log(typeof(message))
     
@@ -126,39 +176,6 @@ class DummyPlugin  {
     )
   }
 
-  // async updateValue(key) {
-  //   console.log("updateValue", key)
-  //   let methodName
-  //   let args = []
-
-  //   switch (key) {
-  //     case 'balance':
-  //       methodName = 'balanceOf'
-  //       args = [ this.owner ]
-  //       break
-  //     default:
-  //       methodName = key
-  //   }
-
-  //   let result
-  //   try {
-  //     console.log(args)
-  //     result = await this.contract[methodName](...args)
-  //   } catch (e) {
-  //     console.warn(`failed to load ${key} for layer2App at ${this.address}`)
-  //     if (key === 'balance') {
-  //       throw e
-  //     }
-  //   }
-
-  //   if (result) {
-  //     const val = result[0]
-  //     this[key] = val
-  //     return val
-  //   }
-
-  //   return this[key]
-  // }
 
 
   

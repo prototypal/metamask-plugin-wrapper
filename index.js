@@ -1,5 +1,6 @@
 //const PluginRegistrar = require('eth-plugin-registrar')
 
+
 const DummyPluginScript = require('./examples/dummy-plugin/index')
 const CfPluginScript = require('./examples/cf-plugin/index')
 
@@ -20,6 +21,7 @@ class PluginWrapper {
 // app/scripts/metamask-controller.js:1459
 //     ```setupProviderConnection (outStream, origin) {```
 
+    this.selectedAccount = opts.userAddress
     this.provider = opts.provider
     this.networkId = opts.networkId
     this.plugin = opts.plugin
@@ -30,26 +32,26 @@ class PluginWrapper {
     this.api = {
       getPubKey: this.getPubKey.bind(this),
       getXPubKey: this.getXPubKey.bind(this),
+      signTransactionAppKey: this.signTransactionAppKey.bind(this)
     }
-    
-    if (this.plugin.scriptUrl == "cf") {
-      this.pluginScript = new CfPluginScript({
+
+    const pluginOptions = {
 	provider: this.provider,
 	networkId: this.networkId,
-	api: this.api
-      })
+	api: this.api,
+	selectedAccount: this.selectedAccount
+      }
+    if (this.plugin.scriptUrl == "cf") {
+      this.pluginScript = new CfPluginScript(pluginOptions)
     }
     else {
-      this.pluginScript = new DummyPluginScript({
-	provider: this.provider,
-	networkId: this.networkId,
-	api: this.api	
-      })
+      this.pluginScript = new DummyPluginScript(pluginOptions)
     }
 
 
 
   }
+
 
 
   async getXPubKey(params){
@@ -98,8 +100,32 @@ class PluginWrapper {
       }
     )
   }
-  
 
+  async signTransactionAppKey(params){
+    console.log("dummy plugin signTx Appkey", params)
+    const from = params[0]
+    const to = params[1]
+    const value = params[2]
+    let txParams = {
+      "from": from,
+      "to": to,
+      "gas": "0x76c0", // 30400
+      "gasPrice": "0x9184e72a", 
+      "value": value,
+      "data": "0x"
+    }
+
+
+    
+    await this.provider.sendAsync(
+      {
+	method: "signTransactionAppKey",
+	params: [txParams.from, txParams],
+      }, function(err, result){
+	console.log("dummy plugin received answer signTxAppKey", err, result)
+      }
+    )
+  }
   
 }
 
