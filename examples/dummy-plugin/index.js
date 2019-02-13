@@ -8,15 +8,15 @@ class DummyPlugin  {
     		  call:this.getXPubKey.bind(this),
     		  params:[]
     		 },
-		 {name: "getPubKeyAppAccount",
-    		  call:this.getPubKey.bind(this),
+		 {name: "getAppPubKey  -  AppAccount",
+    		  call:this.getAppPubKey.bind(this),
     		  params:[{name: "subHdPath",
 			   type: "string"},
 			  {name: "accountIndex",
     			   type: "uint"},
     			 ]
     		 },
-		 {name: "sendTransactionAppKey",
+		 {name: "sendTransactionAppKey - AppAccount",
     		  call:this.signTransactionAppKey.bind(this),
     		  params:[{name: "from",
     			   type: "string"},
@@ -55,6 +55,91 @@ class DummyPlugin  {
     this.networkId = opts.networkId
     this.mainAccount = opts.selectedAccount
 
+    console.log(opts)
+    this.api = opts.api
+    
+  }
+
+  renderUI(){
+    return("plugin UI Dummy plugin " +
+	   "                       " +
+	   "appPubKey: " + this.appPubKey  +
+	   "xPubKey: " + this.xPubKey
+	  )
+  }
+
+  async signMessageFromMainAccount(params){
+    console.log(params)
+    let message  = {
+	  nonce: 0,
+	  data: "test message"
+	}
+    this.signTypedMessageFromMainAccount(message, this.mainAccount, (signature)=>{
+      console.log("signed", message, signature)	
+    })
+  }
+		
+  async getXPubKey(params){
+    console.log("dummy plugin getXPubKey", params)
+    const ans = await this.api.getXPubKey(params)
+    console.log(ans)
+    this.xPubKey = ans.result
+    console.log(this.xPubKey)
+  }
+  
+  async getAppPubKey(params){
+    console.log("dummy plugin getPubKey", params)
+    const ans = await this.api.getPubKey(params)
+    console.log(ans)
+    this.appPubKey = ans.result
+  }
+
+  async signTransactionAppKey(params){
+    this.api.signTransactionAppKey(params)    
+  }
+  async signTypedMessageAppKey(params){
+  }
+
+
+
+
+
+
+  // Using Web3 for main accounts
+
+  
+  async sendFromMainAccount(params) {
+    let txParams = {
+      "from": this.mainAccount,
+      "to": params[0],
+      "gas": "0x76c0", // 30400
+      "gasPrice": "0x9184e72a", 
+      "value": params[1],
+      "data": "0x"
+    }
+    await this.provider.sendAsync(
+      {
+	method: "eth_sendTransaction",
+	params: [txParams],
+      },
+      function(err, result) {
+    	if (err) {
+          return console.error(err);
+    	}
+	console.log(result)
+	cb(result)
+      }
+    )
+    
+  }
+
+
+
+  
+  async signTypedMessageFromMainAccount(message, fromAccount, cb){
+    console.log(message)
+    console.log(typeof(message))
+
     // // EIP 712 data
     this.domain = [
       { name: "name", type: "string" },
@@ -77,70 +162,6 @@ class DummyPlugin  {
       salt: "0x12345611111111111"
     }
 
-    console.log(opts)
-    this.api = opts.api
-    
-  }
-
-  renderUI(){
-    return("plugin UI a")
-  }
-
-  async signMessageFromMainAccount(params){
-    console.log(params)
-    let message  = {
-	  nonce: 0,
-	  data: "test message"
-	}
-    this.signTypedMessageFromMainAccount(message, this.mainAccount, (signature)=>{
-      console.log("signed", message, signature)	
-    })
-  }
-		
-  async getXPubKey(params){
-    console.log("dummy plugin getXPubKey", params)
-    this.api.getXPubKey(params)
-  }
-  
-  async getPubKey(params){
-    console.log("dummy plugin getPubKey", params)
-    this.api.getPubKey(params)
-  }
-
-  async signTransactionAppKey(params){
-    this.api.signTransactionAppKey(params)    
-  }
-
-  async sendFromMainAccount(params) {
-    //console.log(params[0], params[1], this.mainAccount)
-    const from = "0x6cCB1DEf4Ff8C4b953B084a220ec51817B65fD87"
-    let txParams = {
-      "from": this.mainAccount,
-      "to": params[0],
-      "gas": "0x76c0", // 30400
-      "gasPrice": "0x9184e72a", 
-      "value": params[1],
-      "data": "0x"
-    }
-    
-    await this.provider.sendAsync(
-      {
-	method: "eth_sendTransaction",
-	params: [txParams],
-      },
-      function(err, result) {
-    	if (err) {
-          return console.error(err);
-    	}
-	console.log(result)
-	cb(result)
-      }
-    )
-    
-  }
-  async signTypedMessageFromMainAccount(message, fromAccount, cb){
-    console.log(message)
-    console.log(typeof(message))
     
     let data = JSON.stringify({
       types: {

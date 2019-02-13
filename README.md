@@ -242,7 +242,7 @@ Request Decryption
 
 [] solve privacy issue with xpubkey
 
-[]
+[] rework split uid path in wrapper
 
 []
 

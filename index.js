@@ -30,7 +30,7 @@ class PluginWrapper {
     // or if we do we should restricts so that the plugins can't call directly the api's rpc methods, nor some others
     // we really want the plugin to have access to read call form the provider, so maybe a subset onlys 
     this.api = {
-      getPubKey: this.getPubKey.bind(this),
+      getPubKey: this.getAppPubKey.bind(this),
       getXPubKey: this.getXPubKey.bind(this),
       signTransactionAppKey: this.signTransactionAppKey.bind(this)
     }
@@ -54,17 +54,6 @@ class PluginWrapper {
 
 
 
-  async getXPubKey(params){
-    console.log("dummy plugin getXPubKey", params)
-    await this.provider.sendAsync(
-      {
-	method: "getXPubKey",
-	params: params,
-      }, function(err, result){
-	console.log("dummy plugin received answer", err, result)
-      }
-    )
-  }
 
   // 0x37a962652fcb752ae373feb022dd2882a9348b79
   // 37a9 6265 2fcb 752a e373 feb0 22dd 2882 a934 8b79
@@ -82,7 +71,24 @@ class PluginWrapper {
     return subPath
   }
 
-  async getPubKey(params){
+  getXPubKey(params){
+    console.log("dummy plugin getXPubKey", params)
+    const provider = this.provider
+    const xPub = new Promise(function(resolve, reject) {
+      provider.sendAsync(
+	{
+	  method: "getXPubKey",
+	  params: params,
+	}, function(err, result){
+	  console.log("dummy plugin received answer", err, result)
+	  resolve(result)
+	}
+      )
+    })
+    return xPub
+  }
+  
+  getAppPubKey(params){
     console.log("dummy plugin getPubKey", params)
     // there is a limit on index values, var HARDENED_OFFSET = 0x80000000
     // for the index derived from the authorAddress we need to find a way to split it
@@ -91,14 +97,19 @@ class PluginWrapper {
     const index = params[1]
     const newParams = [hdPath, index]
     console.log(newParams)
-    await this.provider.sendAsync(
-      {
-	method: "getPubKey",
-	params: newParams,
-      }, function(err, result){
-	console.log("dummy plugin received answer getPubKey", err, result)
-      }
-    )
+    const provider = this.provider
+    const appPubKey = new Promise(function(resolve, reject){
+      provider.sendAsync(
+	{
+	  method: "getPubKey",
+	  params: newParams,
+	}, function(err, result){
+	  console.log("dummy plugin received answer getPubKey", err, result)
+	  resolve(result)
+	}
+      )
+    })
+    return appPubKey
   }
 
   async signTransactionAppKey(params){
