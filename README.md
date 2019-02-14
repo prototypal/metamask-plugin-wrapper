@@ -7,6 +7,11 @@ Implements the message API communications
 Will inject the plugin functions and state into visited webpages
 Will be ran in metamask extension background page
 
+## Metamask Plugins
+
+[Read here about Plugins](docs/PLUGINS.md)
+[Read here about App Keys](docs/APPKEYS.md)
+
 ## Setup
 
 clone and
@@ -31,20 +36,21 @@ run `npm link eth-hd-keyring` in KeyringController folder
 
 ## Parameters
 
+* plugin ens name
+
+metadata:
+
 * author eth address
 (all below will be resolved by an eth smart contract based registrar from above, or from a single URL)
-* plugin script name
 * plugin script url
-
 * plugin symbol
 * plugin image
 * plugin eth gateway contract
 
+* plugin key types:
+- app keys
+- bip44 keys (also indicate the bip44 code, 60 is reserved for ETH, MetaMask main accounts)
 
-## Available elements from metamask:
-
-Provider
-Blocktracker
 
 ## Plugin script rules:
 
@@ -62,11 +68,14 @@ to communicate with inpages
 
 ### for plugin script:
 
-#### crypto:
-
-
-
 json rpc method middleware
+private RPC methods for app keys
+
+usual provider for main account keys
+
+these methods are wrapped and passed through api
+ens website or plugin allows to access them
+with this api:
 
 
 * **getPubKey(string hdPath, uint index)** returns bytes:
@@ -244,7 +253,7 @@ Request Decryption
 
 [] rework split uid path in wrapper
 
-[]
+[] persist app keys
 
 [] ETHcc talk
 
@@ -260,3 +269,11 @@ Request Decryption
 - eip on app / domain keys
 - discussions on plugin api specs
 - secure the rpc calls of the new methods (stop passing provider to plugins and also disallow other origins to use these rpc calls with some "fake" params)
+
+
+# Questions:
+
+- Need help for UI:
+  -iframe for app render ui
+  -delimit plugin space...
+- New RPC methods for app keys, how can we restrict access to them?

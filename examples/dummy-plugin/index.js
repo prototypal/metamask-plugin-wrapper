@@ -63,21 +63,12 @@ class DummyPlugin  {
   renderUI(){
     return("plugin UI Dummy plugin " +
 	   "                       " +
-	   "appPubKey: " + this.appPubKey  +
-	   "xPubKey: " + this.xPubKey
+	   "  xPubKey: " + this.xPubKey +
+	   "  appPubKey: " + this.appPubKey  +
+	   " last Call result: " + JSON.stringify(this.result,null,'\t')
 	  )
   }
 
-  async signMessageFromMainAccount(params){
-    console.log(params)
-    let message  = {
-	  nonce: 0,
-	  data: "test message"
-	}
-    this.signTypedMessageFromMainAccount(message, this.mainAccount, (signature)=>{
-      console.log("signed", message, signature)	
-    })
-  }
 		
   async getXPubKey(params){
     console.log("dummy plugin getXPubKey", params)
@@ -95,8 +86,11 @@ class DummyPlugin  {
   }
 
   async signTransactionAppKey(params){
-    this.api.signTransactionAppKey(params)    
+    const ans = await this.api.signTransactionAppKey(params)
+    console.log(ans)
+    this.result = ans.result
   }
+  
   async signTypedMessageAppKey(params){
   }
 
@@ -136,6 +130,18 @@ class DummyPlugin  {
 
 
   
+  async signMessageFromMainAccount(params){
+    console.log(params)
+    let message  = {
+	  nonce: 0,
+	  data: "test message"
+	}
+    this.signTypedMessageFromMainAccount(message, this.mainAccount, (signature)=>{
+      console.log("signed", message, signature)	
+    })
+  }
+
+
   async signTypedMessageFromMainAccount(message, fromAccount, cb){
     console.log(message)
     console.log(typeof(message))

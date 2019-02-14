@@ -112,7 +112,7 @@ class PluginWrapper {
     return appPubKey
   }
 
-  async signTransactionAppKey(params){
+  signTransactionAppKey(params){
     console.log("dummy plugin signTx Appkey", params)
     const from = params[0]
     const to = params[1]
@@ -125,17 +125,19 @@ class PluginWrapper {
       "value": value,
       "data": "0x"
     }
-
-
-    
-    await this.provider.sendAsync(
-      {
-	method: "signTransactionAppKey",
-	params: [txParams.from, txParams],
-      }, function(err, result){
-	console.log("dummy plugin received answer signTxAppKey", err, result)
-      }
-    )
+    const provider = this.provider
+    const signedTx = new Promise(function(resolve, reject) {
+      provider.sendAsync(
+	{
+	  method: "signTransactionAppKey",
+	  params: [txParams.from, txParams],
+	}, function(err, result){
+	  console.log("dummy plugin received answer signTxAppKey", err, result)
+	  resolve(result)
+	}
+      )
+    })
+    return signedTx
   }
   
 }
