@@ -44,18 +44,27 @@ adds complexity to restore, one should remember which account is which
 same benefits of privacy could be implemented by add an user provided field in the HD path, after domain and before app subpath
 
 ### Temporary current implementation
-I currently assign the first path of the hdPath using the keccak of the name and the I let the plugin's code add any extra subPath to this. and then he can add an account index.
-So for example it would be:
+I currently assign the first path of the hdPath using the keccak256 of the full ens name (not following ens rules yet) and the I let the plugin's code add any extra subPath to this. and then he can add an account index.
+
+
+So for example it would be for an hash:
+
+e4a10c258c7b68c38df1cf0caf03ce2e34b5ec02e5abdd3ef18f0703f317c62a
+split it and convert to uints
+
+eg for short hash
 37a9 6265 2fcb 752a e373 feb0 22dd 2882 a934 8b79
-`m/14249/25189/12235/29994/58227/65200/8925/10370/43316/35705/index_customisable_by_plugin/index_customisable_by_plugin/index_customisable_by_plugin.../index_customisable_by_plugin/ account index`
+`m/52/14249/25189/12235/29994/58227/65200/8925/10370/43316/35705/index_customisable_by_plugin/index_customisable_by_plugin/index_customisable_by_plugin.../index_customisable_by_plugin/ account index`
 
 the `index_customisable_by_plugin/.../index_customisable_by_plugin` part is just a string but it needs to follow the same rules as bip32
 
+domain hash should be probably split larger than 4bytes but then we have the limit of hardened offset, maybe we need to replace this lib with kumavis' and write a new deriver
 
 
 ## Elements of these HD Paths
 ### Domain specific HD subPaths
 
+[Domain Specific Hd Path]
 ENS Name: vitalik.buterin.eth
 Ens name hash eg. : 
 e4a10c258c7b68c38df1cf0caf03ce2e34b5ec02e5abdd3ef18f0703f317c62a
@@ -64,7 +73,7 @@ see here to see how an ENS name hash is computed
 
 ### App controlled HD subPath
 
-allows to use other parameters for under the app control
+allows to use other parameters under the app control
 ex: version, username, ...
 
 ### Account index
@@ -87,10 +96,6 @@ hdPath: customise the app key path (and can use several), should be formatted as
 with uint under 0x80000000
 can also be hardened using '
 Derive an new account for the plugin (along some specific derivation path) and get public key
-
-Should we allow to specify alternative derivation types and path ?
-we use BIP32 and BIP44 and some custom path
-
 
 
 * **getXPubKey() returns bytes**:

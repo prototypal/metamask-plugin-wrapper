@@ -93,7 +93,7 @@ class PluginWrapper {
     // there is a limit on index values, var HARDENED_OFFSET = 0x80000000
     // for the index derived from the authorAddress we need to find a way to split it
     const uidSubPath = this.splitUid(this.plugin.uid)
-    const hdPath = "m/" + uidSubPath +"/"  + params[0]
+    const hdPath = "m/52/" + uidSubPath +"/"  + params[0]
     const index = params[1]
     const newParams = [hdPath, index]
     console.log(newParams)
