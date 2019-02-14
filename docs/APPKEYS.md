@@ -43,22 +43,6 @@ makes this a subset of an ethereum account or should be eventually generalised t
 adds complexity to restore, one should remember which account is which
 same benefits of privacy could be implemented by add an user provided field in the HD path, after domain and before app subpath
 
-### Temporary current implementation
-I currently assign the first path of the hdPath using the keccak256 of the full ens name (not following ens rules yet) and the I let the plugin's code add any extra subPath to this. and then he can add an account index.
-
-
-So for example it would be for an hash:
-
-e4a10c258c7b68c38df1cf0caf03ce2e34b5ec02e5abdd3ef18f0703f317c62a
-split it and convert to uints
-
-eg for short hash
-37a9 6265 2fcb 752a e373 feb0 22dd 2882 a934 8b79
-`m/52/14249/25189/12235/29994/58227/65200/8925/10370/43316/35705/index_customisable_by_plugin/index_customisable_by_plugin/index_customisable_by_plugin.../index_customisable_by_plugin/ account index`
-
-the `index_customisable_by_plugin/.../index_customisable_by_plugin` part is just a string but it needs to follow the same rules as bip32
-
-domain hash should be probably split larger than 4bytes but then we have the limit of hardened offset, maybe we need to replace this lib with kumavis' and write a new deriver
 
 
 ## Elements of these HD Paths
@@ -78,15 +62,24 @@ ex: version, username, ...
 
 ### Account index
 
-# Notes:
-- In Hd Paths, Merge app controlled subset and account index ?
+
+### Temporary current implementation
+I currently assign the first path of the hdPath using the keccak256 of the full ens name (not following ens rules yet) and the I let the plugin's code add any extra subPath to this. and then he can add an account index.
 
 
-- XPubKeys, how do we introduce them? How do we isolate them such that we don't leak a single XPubKey for the whole mnemonic, which would be a big privacy concern and would also remove the benefit of proposal 2 for hd path isolation per main account.
+So for example it would be for an hash:
 
+e4a10c258c7b68c38df1cf0caf03ce2e34b5ec02e5abdd3ef18f0703f317c62a
+split it and convert to uints
 
-json rpc method middleware
-private RPC methods for app keys
+eg for short hash
+37a9 6265 2fcb 752a e373 feb0 22dd 2882 a934 8b79
+`m/52/14249/25189/12235/29994/58227/65200/8925/10370/43316/35705/index_customisable_by_plugin/index_customisable_by_plugin/index_customisable_by_plugin.../index_customisable_by_plugin/ account index`
+
+the `index_customisable_by_plugin/.../index_customisable_by_plugin` part is just a string but it needs to follow the same rules as bip32
+
+domain hash should be probably split larger than 4bytes but then we have the limit of hardened offset, maybe we need to replace this lib with kumavis' and write a new deriver
+
 
 # API
 
@@ -124,3 +117,14 @@ Request Encryption
 
 * **decrypt(uint index, bytes) return data**
 Request Decryption
+
+
+# Notes:
+- In Hd Paths, Merge app controlled subset and account index ?
+
+
+- XPubKeys, how do we introduce them? How do we isolate them such that we don't leak a single XPubKey for the whole mnemonic, which would be a big privacy concern and would also remove the benefit of proposal 2 for hd path isolation per main account.
+
+
+json rpc method middleware
+private RPC methods for app keys

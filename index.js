@@ -32,7 +32,8 @@ class PluginWrapper {
     this.api = {
       getPubKey: this.getAppPubKey.bind(this),
       getXPubKey: this.getXPubKey.bind(this),
-      signTransactionAppKey: this.signTransactionAppKey.bind(this)
+      signTransactionAppKey: this.signTransactionAppKey.bind(this),
+      signTypedMessageAppKey: this.signTypedMessageAppKey.bind(this),
     }
 
     const pluginOptions = {
@@ -138,6 +139,26 @@ class PluginWrapper {
       )
     })
     return signedTx
+  }
+
+
+  signTypedMessageAppKey(params){
+    console.log("dummy plugin signTypedMessage Appkey", params)
+    const from = params[0]
+    const message = params[1]
+    const provider = this.provider
+    const signedTypedMessage = new Promise(function(resolve, reject) {
+      provider.sendAsync(
+	{
+	  method: "signTypedMessageAppKey",
+	  params: [from, message],
+	}, function(err, result){
+	  console.log("dummy plugin received answer signTypedMessage", err, result)
+	  resolve(result)
+	}
+      )
+    })
+    return signedTypedMessage
   }
   
 }

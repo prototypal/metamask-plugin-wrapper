@@ -26,6 +26,14 @@ class DummyPlugin  {
     			   type: "uint"},			  
     			 ]
     		 },
+		 {name: "signTypedMessageAppKey - AppAccount",
+    		  call:this.signTypedMessageAppKey.bind(this),
+    		  params:[{name: "from",
+    			   type: "string"},
+			  {name: "message",
+    			   type: "uint"},			  
+    			 ]
+    		 },
 		 {name: "sendFromMainAccount",
     		  call:this.sendFromMainAccount.bind(this),
     		  params:[{name: "to",
@@ -34,8 +42,8 @@ class DummyPlugin  {
     			   type: "uint"},			  
     			 ]
     		 },
-		 {name: "signMessageFromMainAccount",
-    		  call:this.signMessageFromMainAccount.bind(this),
+		 {name: "signTypedMessageFromMainAccount",
+    		  call:this.signTypedMessageFromMainAccount.bind(this),
     		  params:[{name: "message",
     			   type: "string"},
     			 ]
@@ -92,8 +100,18 @@ class DummyPlugin  {
   }
   
   async signTypedMessageAppKey(params){
+    const finalMessage = this.prepareTypedMessage(params[0], params[1])
+    const ans = await this.api.signTypedMessageAppKey([params[0], finalMessage])
+    console.log(ans)
+    const signature = ans.result.substring(2)
+    const r = "0x" + signature.substring(0, 64)
+    const s = "0x" + signature.substring(64, 128)
+    const v = parseInt(signature.substring(128, 130), 16)
+    // console.log("r: ", r)
+    // console.log("s: ", s)
+    // console.log("v: ", v)
+    this.result = " r " + r + " s " + s + " v " + v
   }
-
 
 
 
@@ -127,63 +145,16 @@ class DummyPlugin  {
     
   }
 
-
-
   
-  async signMessageFromMainAccount(params){
+  async signTypedMessageFromMainAccount(params){
     console.log(params)
-    let message  = {
-	  nonce: 0,
-	  data: "test message"
-	}
-    this.signTypedMessageFromMainAccount(message, this.mainAccount, (signature)=>{
-      console.log("signed", message, signature)	
-    })
-  }
-
-
-  async signTypedMessageFromMainAccount(message, fromAccount, cb){
-    console.log(message)
-    console.log(typeof(message))
-
-    // // EIP 712 data
-    this.domain = [
-      { name: "name", type: "string" },
-      { name: "version", type: "string" },
-      { name: "chainId", type: "uint256" },
-      { name: "verifyingContract", type: "address" },
-      { name: "salt", type: "bytes32" },
-    ]
-
-    this.channelMessage = [
-      {name: "nonce", type: "uint256"},
-      {name: "data", type: "string"},
-    ]
-
-    this.domainData = {
-      name: "MetaMask Dummy Plugin",
-      version: "1",
-      chainId: this.networkId,
-      verifyingContract: this.address,
-      salt: "0x12345611111111111"
-    }
-
-    
-    let data = JSON.stringify({
-      types: {
-	EIP712Domain: this.domain,
-	ChannelMessage: this.channelMessage,
-      },
-      domain: this.domainData,
-      primaryType: "ChannelMessage",
-      message: message
-    })
-
-    await this.provider.sendAsync(
+    const finalMessage = this.prepareTypedMessage(this.mainAccount, params[0])
+    console.log("message:", finalMessage)
+    this.result = await this.provider.sendAsync(
       {
 	method: "eth_signTypedData_v3",
-	params: [fromAccount, data],
-	from: fromAccount
+	params: [this.mainAccount, finalMessage],
+	from: this.mainAccount
       },
       function(err, result) {
     	if (err) {
@@ -198,9 +169,44 @@ class DummyPlugin  {
 	// console.log("r: ", r)
 	// console.log("s: ", s)
 	// console.log("v: ", v)
-	cb(signature)
+	return signature
       }
     )
+  }
+
+
+  prepareTypedMessage(fromAccount, message){
+    // // EIP 712 data
+    const domain = [
+      { name: "name", type: "string" },
+      { name: "version", type: "string" },
+      { name: "chainId", type: "uint256" },
+      { name: "verifyingContract", type: "address" },
+      { name: "salt", type: "bytes32" },
+    ]
+
+    const channelMessage = [
+      {name: "data", type: "string"},
+    ]
+
+    const domainData = {
+      name: "MetaMask Dummy Plugin",
+      version: "1",
+      chainId: this.networkId,
+      verifyingContract: this.address,
+      salt: "0x12345611111111111"
+    }
+
+    let finalMessage = JSON.stringify({
+      types: {
+	EIP712Domain: domain,
+	ChannelMessage: channelMessage,
+      },
+      domain: domainData,
+      primaryType: "ChannelMessage",
+      message: { "data": message }
+    })
+    return finalMessage
   }
 
 

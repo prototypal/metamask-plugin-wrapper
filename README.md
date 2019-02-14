@@ -62,6 +62,10 @@ run `npm link eth-hd-keyring` in KeyringController folder
 
 [] EIP on app keys
 
+[] Allow for multiple hd keyrings (for now in metamask controller we force hd[0]
+
+[] support other keyrings
+
 
 # Notes
 
