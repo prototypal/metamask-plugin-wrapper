@@ -34,11 +34,7 @@ Other potential metadata fields
 
 interface for functions
 interface for state (read functions)
-SES
 
-implement permission system :
-to communicate with other plugins
-to communicate with external webpages
 
 ## Message API
 
@@ -64,8 +60,9 @@ usual provider for main account keys
 	
 	(todo: handle other currencies / tokens and also multiple ones ?
 
+### temporary basic interface in metamask for testing (until I implement the iframe)
 
-	// example plugin interface
+// example plugin interface
     this.pluginInterface ={
         actions:[{name: "registerHdPath",
     		  call:this.registerHdPath.bind(this),
@@ -97,87 +94,34 @@ usual provider for main account keys
     	    ]
     }
 
-    // EIP 712 data
-    this.domain = [
-      { name: "name", type: "string" },
-      { name: "version", type: "string" },
-      { name: "chainId", type: "uint256" },
-      { name: "verifyingContract", type: "address" },
-      { name: "salt", type: "bytes32" },
-    ]
 
-    this.channelMessage = [
-      {name: "nonce", type: "uint256"},
-      {name: "previousSignature", type: "bytes32"},
-      {name: "depositCustomHash", type: "bytes32"},
-      {name: "sender", type: "Accounts"},
-      {name: "recipient1", type: "Accounts"},
-      {name: "recipient2", type: "Accounts"},
-    ]
-    this.accounts = [
-      {name: "address", type: "address"},
-      {name: "balance", type: "uint256"}
-    ]
-    //Todo: chainId use network id
-    this.domainData = {
-      name: "MetaMask Payment Channel Example",
-      version: "1",
-      chainId: this.networkId,
-      verifyingContract: this.address,
-      salt: "0x1"
-    }
-    
-  }
+### (TBD) Inject
+
+### (TBD) Iframed UI controlled by the plugin script
+
+NOT Implemented yet
+
+### (TBD) Plugin code isolation
+
+#### permissions
+
+##### In Metamask
+for now, upon installation the user grants all permissions to plugin.
+-request actions from main accounts
+-access to domain app keys
+-sign with domain app keys without requesting confirmation from user
+-(tbd) store in local db (domain isolated)
+-(tbd) run script in background metamask
+-(tbd) show ui in metamask
+-(tbd) inject in webpages the plugin functions along metamask
+
+later we should allow different level of permissions (including new permissions for new features)
 
 
-#### permissions:
-	
+#### for external webpages:
 
-### for inpage:
-
-
-### basic interface in metamask
+similar to 1102, pages will be able to ask to connect to your plugin and use the functions you are pasing through the interface (but won't have acces to the app key api themselves)
 
 
-# TODO
-
-[] provider, determine if we need to pass it to the plugin from the wrapper. if so, then we need to secure the rpc calls such that we don't give access to some of them
-
-[] if so, create new provider for each plugin wrapper
-
-[] research if we need to harden some indexes
-
-[] check xpub key with hardened path indexes
-
-[] how to handle bip44 plugins - create a plugin's type?
-
-[] handle ERC20/non fungible deposits
-
-[] solve privacy issue with xpubkey
-
-[] rework split uid path in wrapper
-
-[] persist app keys
-
-[] ETHcc talk
-
-[] ETHcc API references and discussion links/forum (github issues?)
-
-[] EIP on app keys
 
 
-# Notes
-
-
-- uses metamask/keyringcontroller and metamask/eth-hd-keyring, plugin-system branches
-- eip on app / domain keys
-- discussions on plugin api specs
-- secure the rpc calls of the new methods (stop passing provider to plugins and also disallow other origins to use these rpc calls with some "fake" params)
-
-
-# Questions:
-
-- Need help for UI:
-  -iframe for app render ui
-  -delimit plugin space...
-- New RPC methods for app keys, how can we restrict access to them?

@@ -34,36 +34,6 @@ run `npm link metamask-plugin-wrapper` in metamask-extension
 
 run `npm link eth-hd-keyring` in KeyringController folder
 
-## Parameters
-
-* plugin ens name
-
-metadata:
-
-* author eth address
-(all below will be resolved by an eth smart contract based registrar from above, or from a single URL)
-* plugin script url
-* plugin symbol
-* plugin image
-* plugin eth gateway contract
-
-* plugin key types:
-- app keys
-- bip44 keys (also indicate the bip44 code, 60 is reserved for ETH, MetaMask main accounts)
-
-
-## Plugin script rules:
-
-interface for functions
-interface for state (read functions)
-SES
-
-implement permission system :
-to communicate with other plugins
-to communicate with inpages
-
-
-
 ## Message API
 
 ### for plugin script:
