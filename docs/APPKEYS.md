@@ -42,39 +42,6 @@ cons:
 makes this a subset of an ETH account?
 or could be generalised to non ETH main accounts?
 
-## Elements of these HD Paths
-### Domain specific HD subPaths
-ENS Name: vitalik.buterin.eth
-Ens name hash eg. : 
-e4a10c258c7b68c38df1cf0caf03ce2e34b5ec02e5abdd3ef18f0703f317c62a
-
-
-
-see here to see how an ENS name hash is computed
-### App controlled HD subPath
-
-
-# Notes:
-- In Hd Paths, Merge app controlled subset and account index ?
-
-
-
-- XPubKeys, how do we introduce them? How do we isolate them such that we don't leak a single XPubKey for the whole mnemonic, which would be a big privacy concern and would also remove the benefit of proposal 2 for hd path isolation per main account.
-
-
-json rpc method middleware
-private RPC methods for app keys
-
-# API
-* **getPubKey(string hdPath, uint index)** returns bytes:
-hdPath: customise the app key path (and can use several), should be formatted as uint/uint/uint (can be extended as much as one likes)
-with uint under 0x80000000
-can also be hardened using '
-Derive an new account for the plugin (along some specific derivation path) and get public key
-
-Should we allow to specify alternative derivation types and path ?
-we use BIP32 and BIP44 and some custom path
-
 
 key types (selected on installation):
 
@@ -90,14 +57,55 @@ App keys and not plugin keys
 (by domain)
 implement in keyring these specific account separetely
 
-I currently assign the first path of the hdPath using the plugin eth address (authorAddress) and the I let the plugin's code add any extra subPath to this. and then he can add an account index.
+
+
+I currently assign the first path of the hdPath using the keccak of the name and the I let the plugin's code add any extra subPath to this. and then he can add an account index.
 So for example it would be:
-// plugin eth author address
- // 0x37a962652fcb752ae373feb022dd2882a9348b79
- // 37a9 6265 2fcb 752a e373 feb0 22dd 2882 a934 8b79
+37a9 6265 2fcb 752a e373 feb0 22dd 2882 a934 8b79
 `m/14249/25189/12235/29994/58227/65200/8925/10370/43316/35705/index_customisable_by_plugin/index_customisable_by_plugin/index_customisable_by_plugin.../index_customisable_by_plugin/ account index`
 
 the `index_customisable_by_plugin/.../index_customisable_by_plugin` part is just a string but it needs to follow the same rules as bip32
+
+
+
+## Elements of these HD Paths
+### Domain specific HD subPaths
+
+ENS Name: vitalik.buterin.eth
+Ens name hash eg. : 
+e4a10c258c7b68c38df1cf0caf03ce2e34b5ec02e5abdd3ef18f0703f317c62a
+
+see here to see how an ENS name hash is computed
+
+### App controlled HD subPath
+
+allows to use other parameters for under the app control
+ex: version, username, ...
+
+### Account index
+
+# Notes:
+- In Hd Paths, Merge app controlled subset and account index ?
+
+
+- XPubKeys, how do we introduce them? How do we isolate them such that we don't leak a single XPubKey for the whole mnemonic, which would be a big privacy concern and would also remove the benefit of proposal 2 for hd path isolation per main account.
+
+
+json rpc method middleware
+private RPC methods for app keys
+
+# API
+
+
+* **getPubKey(string hdPath, uint index)** returns bytes:
+hdPath: customise the app key path (and can use several), should be formatted as uint/uint/uint (can be extended as much as one likes)
+with uint under 0x80000000
+can also be hardened using '
+Derive an new account for the plugin (along some specific derivation path) and get public key
+
+Should we allow to specify alternative derivation types and path ?
+we use BIP32 and BIP44 and some custom path
+
 
 
 * **getXPubKey() returns bytes**:
@@ -108,22 +116,10 @@ one mnemonic = one extended public key for all hdPaths
 that means some privacy will be leaked accross plugins
 as long as one can guess the hdPath used by the other plugins, one can track the accounts of an user
 
-
 * **signWithPluginAccount(uint index, bytes dataToSign, string signMethodType) returns bytes**:
 Sign with a plugin’s account
 this is eth sign ? we should support alternative signing / encryption methods ?
 
-* **requestFunding(address depositAddress, uint suggestedAmount, bytes txData) returns ethTxHash**:
-Request funding from an account outside of plugin control
-User can select account and amount in metamask
-(send Ether tx without tx data)
-how secure is it to include txData
-how do we handle deposits in tokens ERC20 and others ?
-how do dapps recognize who is the depositer if account is different from plugin account (since it's a main metamask account) and if there are no txData (or if txData is already used for ERC20) ?
-
-* **withdrawFromPlugin(address withdrawAddress, bytes txData)**:
-0 ether function call from an account outside of plugin control → this is a security problem (tx.origin) => restriction
-withdrawAddress should be a depositedAddress already used
 
 * **persistInMetaMaskDb(key, data)**:
 Store in MetaMask localdb, specific store for plugin
