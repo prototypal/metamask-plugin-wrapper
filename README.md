@@ -9,8 +9,10 @@ Will be ran in metamask extension background page
 
 ## Metamask Plugins
 
-[Read here about Plugins](docs/PLUGINS.md)
-[Read here about App Keys](docs/APPKEYS.md)
+* [Read here about Plugins](docs/PLUGINS.md)
+
+
+* [Read here about App Keys](docs/APPKEYS.md)
 
 ## Setup
 

@@ -39,26 +39,11 @@ One question though is how do you handle apps/plugin that would like to interact
 Also how does this applies to the plugins if metamask doesn't have a "selected account anymore"? Logging into plugins in the same way as in websites, EIP1102?
 
 cons: 
-makes this a subset of an ETH account?
-or could be generalised to non ETH main accounts?
+makes this a subset of an ethereum account or should be eventually generalised to non ETH main accounts?
+adds complexity to restore, one should remember which account is which
+same benefits of privacy could be implemented by add an user provided field in the HD path, after domain and before app subpath
 
-
-key types (selected on installation):
-
-for cryptocurrencies' plugins: bip44 extension (eth not allowed)
-m / purpose' / coin_type' / account' / change / address_index
-
-or 
-
-for apps/plugins derivation key
-m / pluginUniqueId / coin_type' / account' / change / address_index
-
-App keys and not plugin keys
-(by domain)
-implement in keyring these specific account separetely
-
-
-
+### Temporary current implementation
 I currently assign the first path of the hdPath using the keccak of the name and the I let the plugin's code add any extra subPath to this. and then he can add an account index.
 So for example it would be:
 37a9 6265 2fcb 752a e373 feb0 22dd 2882 a934 8b79

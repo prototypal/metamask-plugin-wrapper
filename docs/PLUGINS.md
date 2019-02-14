@@ -26,8 +26,8 @@ Resolved plugin's metadata (through ENS):
 
 Other potential metadata fields
 * plugin key types:
-** app keys
-** bip44 keys (also indicate the bip44 code, 60 is reserved for ETH, MetaMask main accounts)
+  * app keys
+  * bip44 keys (also indicate the bip44 code, 60 is reserved for ETH, MetaMask main accounts)
 * plugin eth address/gateway contract (if we 
 
 ## Plugin script rules:
