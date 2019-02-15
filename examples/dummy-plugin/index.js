@@ -88,20 +88,20 @@ class DummyPlugin  {
   
   async getAppPubKey(params){
     console.log("dummy plugin getPubKey", params)
-    const ans = await this.api.getPubKey(params)
+    const ans = await this.api.eth_getAppPubKey(params)
     console.log(ans)
     this.appPubKey = ans.result
   }
 
   async signTransactionAppKey(params){
-    const ans = await this.api.signTransactionAppKey(params)
+    const ans = await this.api.eth_signTransactionAppKey(params)
     console.log(ans)
     this.result = ans.result
   }
   
   async signTypedMessageAppKey(params){
     const finalMessage = this.prepareTypedMessage(params[0], params[1])
-    const ans = await this.api.signTypedMessageAppKey([params[0], finalMessage])
+    const ans = await this.api.eth_signTypedMessageAppKey([params[0], finalMessage])
     console.log(ans)
     const signature = ans.result.substring(2)
     const r = "0x" + signature.substring(0, 64)

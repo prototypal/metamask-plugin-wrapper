@@ -66,6 +66,8 @@ run `npm link eth-hd-keyring` in KeyringController folder
 
 [] support other keyrings
 
+[] isolate app keys, make sure that an app can't sign with another's app account using pub key (if known)
+
 
 # Notes
 

@@ -8,10 +8,9 @@ users inputs plugin ens name
 Loads plugin script on url (resolved through ens registrar)
 This scripts has access to:
 * provider
-* app keys api
+* app keys api for the plugin's domain
 * running a script in background page
 * showing an ui in MetaMask through an iframe
-
 
 ## Plugin data:
 

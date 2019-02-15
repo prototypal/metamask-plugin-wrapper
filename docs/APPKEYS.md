@@ -83,14 +83,7 @@ domain hash should be probably split larger than 4bytes but then we have the lim
 
 # API
 
-
-* **getPubKey(string hdPath, uint index)** returns bytes:
-hdPath: customise the app key path (and can use several), should be formatted as uint/uint/uint (can be extended as much as one likes)
-with uint under 0x80000000
-can also be hardened using '
-Derive an new account for the plugin (along some specific derivation path) and get public key
-
-
+## Global App Keys methods
 * **getXPubKey() returns bytes**:
 returns the extended public key of the keyring
 
@@ -99,9 +92,20 @@ one mnemonic = one extended public key for all hdPaths
 that means some privacy will be leaked accross plugins
 as long as one can guess the hdPath used by the other plugins, one can track the accounts of an user
 
+
+## Ethereum App Keys methods
+* **getPubKey(string hdPath, uint index)** returns bytes:
+hdPath: customise the app key path (and can use several), should be formatted as uint/uint/uint (can be extended as much as one likes)
+with uint under 0x80000000
+can also be hardened using '
+Derive an new account for the plugin (along some specific derivation path) and get public key
+
+
 * **signWithPluginAccount(uint index, bytes dataToSign, string signMethodType) returns bytes**:
 Sign with a plugin’s account
 this is eth sign ? we should support alternative signing / encryption methods ?
+
+## Other methods (not implemented yet)
 
 
 * **persistInMetaMaskDb(key, data)**:
