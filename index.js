@@ -30,10 +30,10 @@ class PluginWrapper {
     // or if we do we should restricts so that the plugins can't call directly the api's rpc methods, nor some others
     // we really want the plugin to have access to read call form the provider, so maybe a subset onlys 
     this.api = {
-      getXPubKey: this.getXPubKey.bind(this),
-      eth_getAppPubKey: this.eth_getAppPubKey.bind(this),
-      eth_signTransactionAppKey: this.eth_signTransactionAppKey.bind(this),
-      eth_signTypedMessageAppKey: this.eth_signTypedMessageAppKey.bind(this),
+      appKey_getXPubKey: this.appKey_getXPubKey.bind(this),
+      appKey_eth_getAddress: this.appKey_eth_getAddress.bind(this),
+      appKey_eth_signTransaction: this.appKey_eth_signTransaction.bind(this),
+      appKey_eth_signTypedMessage: this.appKey_eth_signTypedMessage.bind(this),
     }
 
 
@@ -57,8 +57,6 @@ class PluginWrapper {
     // however for now this seems to run in window only
     this.pluginScript.mainProcess()
 
-
-
   }
 
 
@@ -80,13 +78,13 @@ class PluginWrapper {
     return subPath
   }
 
-  getXPubKey(params){
+  appKey_getXPubKey(params){
     console.log("dummy plugin getXPubKey", params)
     const provider = this.provider
     const xPub = new Promise(function(resolve, reject) {
       provider.sendAsync(
 	{
-	  method: "getXPubKey",
+	  method: "appKey_getXPubKey",
 	  params: params,
 	}, function(err, result){
 	  console.log("dummy plugin received answer", err, result)
@@ -97,8 +95,8 @@ class PluginWrapper {
     return xPub
   }
   
-  eth_getAppPubKey(params){
-    console.log("dummy plugin getPubKey", params)
+  appKey_eth_getAddress(params){
+    console.log("dummy plugin getAddress", params)
     // there is a limit on index values, var HARDENED_OFFSET = 0x80000000
     // for the index derived from the authorAddress we need to find a way to split it
     const uidSubPath = this.splitUid(this.plugin.uid)
@@ -107,21 +105,21 @@ class PluginWrapper {
     const newParams = [hdPath, index]
     console.log(newParams)
     const provider = this.provider
-    const appPubKey = new Promise(function(resolve, reject){
+    const appKeyAddress = new Promise(function(resolve, reject){
       provider.sendAsync(
 	{
-	  method: "eth_getAppPubKey",
+	  method: "appKey_eth_getAddress",
 	  params: newParams,
 	}, function(err, result){
-	  console.log("dummy plugin received answer getPubKey", err, result)
+	  console.log("dummy plugin received answer getAppKeyAddress", err, result)
 	  resolve(result)
 	}
       )
     })
-    return appPubKey
+    return appKeyAddress
   }
 
-  eth_signTransactionAppKey(params){
+  appKey_eth_signTransaction(params){
     console.log("dummy plugin signTx Appkey", params)
     const from = params[0]
     const to = params[1]
@@ -138,7 +136,7 @@ class PluginWrapper {
     const signedTx = new Promise(function(resolve, reject) {
       provider.sendAsync(
 	{
-	  method: "eth_signTransactionAppKey",
+	  method: "appKey_eth_signTransaction",
 	  params: [txParams.from, txParams],
 	}, function(err, result){
 	  console.log("dummy plugin received answer signTxAppKey", err, result)
@@ -150,7 +148,7 @@ class PluginWrapper {
   }
 
 
-  eth_signTypedMessageAppKey(params){
+  appKey_eth_signTypedMessage(params){
     console.log("dummy plugin signTypedMessage Appkey", params)
     const from = params[0]
     const message = params[1]
@@ -158,7 +156,7 @@ class PluginWrapper {
     const signedTypedMessage = new Promise(function(resolve, reject) {
       provider.sendAsync(
 	{
-	  method: "eth_signTypedMessageAppKey",
+	  method: "appKey_eth_signTypedMessage",
 	  params: [from, message],
 	}, function(err, result){
 	  console.log("dummy plugin received answer eth_signTypedMessage", err, result)

@@ -5,11 +5,11 @@ class DummyPlugin  {
     this.renderUI = this.renderUI.bind(this)
     this.pluginInterface ={
         actions:[{name: "getXPubKey",
-    		  call:this.getXPubKey.bind(this),
+    		  call:this.appKey_getXPubKey.bind(this),
     		  params:[]
     		 },
-		 {name: "getAppPubKey  -  AppAccount",
-    		  call:this.getAppPubKey.bind(this),
+		 {name: "getAppAddress  -  AppAccount",
+    		  call:this.appKey_eth_getAddress.bind(this),
     		  params:[{name: "subHdPath",
 			   type: "string"},
 			  {name: "accountIndex",
@@ -17,7 +17,7 @@ class DummyPlugin  {
     			 ]
     		 },
 		 {name: "sendTransactionAppKey - AppAccount",
-    		  call:this.signTransactionAppKey.bind(this),
+    		  call:this.appKey_eth_signTransaction.bind(this),
     		  params:[{name: "from",
     			   type: "string"},
 			  {name: "to",
@@ -27,7 +27,7 @@ class DummyPlugin  {
     			 ]
     		 },
 		 {name: "signTypedMessageAppKey - AppAccount",
-    		  call:this.signTypedMessageAppKey.bind(this),
+    		  call:this.appKey_eth_signTypedMessage.bind(this),
     		  params:[{name: "from",
     			   type: "string"},
 			  {name: "message",
@@ -80,37 +80,37 @@ class DummyPlugin  {
 	   "plugin UI Dummy plugin " +
 	   "                       " +
 	   "  xPubKey: " + this.xPubKey +
-	   "  appPubKey: " + this.appPubKey  +
+	   "  appAddress: " + this.appAddress  +
 	   " last Call result: " + JSON.stringify(this.result,null,'\t') +
 	   "</div>"
 	  )
   }
 
 		
-  async getXPubKey(params){
+  async appKey_getXPubKey(params){
     console.log("dummy plugin getXPubKey", params)
-    const ans = await this.api.getXPubKey(params)
+    const ans = await this.api.appKey_getXPubKey(params)
     console.log(ans)
     this.xPubKey = ans.result
     console.log(this.xPubKey)
   }
   
-  async getAppPubKey(params){
+  async appKey_eth_getAddress(params){
     console.log("dummy plugin getPubKey", params)
-    const ans = await this.api.eth_getAppPubKey(params)
+    const ans = await this.api.appKey_eth_getAddress(params)
     console.log(ans)
-    this.appPubKey = ans.result
+    this.appAddress = ans.result
   }
 
-  async signTransactionAppKey(params){
-    const ans = await this.api.eth_signTransactionAppKey(params)
+  async appKey_eth_signTransaction(params){
+    const ans = await this.api.appKey_eth_signTransaction(params)
     console.log(ans)
     this.result = ans.result
   }
   
-  async signTypedMessageAppKey(params){
+  async appKey_eth_signTypedMessage(params){
     const finalMessage = this.prepareTypedMessage(params[0], params[1])
-    const ans = await this.api.eth_signTypedMessageAppKey([params[0], finalMessage])
+    const ans = await this.api.appKey_eth_signTypedMessage([params[0], finalMessage])
     console.log(ans)
     const signature = ans.result.substring(2)
     const r = "0x" + signature.substring(0, 64)
