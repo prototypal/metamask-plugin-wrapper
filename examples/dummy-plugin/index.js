@@ -65,15 +65,24 @@ class DummyPlugin  {
 
     console.log(opts)
     this.api = opts.api
-    
+
+  }
+
+
+  mainProcess(){
+    setInterval(()=>{
+      console.log("script background process alive")
+    }, 5000)
   }
 
   renderUI(){
-    return("plugin UI Dummy plugin " +
+    return("<div>" +
+	   "plugin UI Dummy plugin " +
 	   "                       " +
 	   "  xPubKey: " + this.xPubKey +
 	   "  appPubKey: " + this.appPubKey  +
-	   " last Call result: " + JSON.stringify(this.result,null,'\t')
+	   " last Call result: " + JSON.stringify(this.result,null,'\t') +
+	   "</div>"
 	  )
   }
 

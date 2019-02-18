@@ -53,6 +53,11 @@ class PluginWrapper {
     }
 
 
+    // start plugin script background process
+    // however for now this seems to run in window only
+    this.pluginScript.mainProcess()
+
+
 
   }
 
