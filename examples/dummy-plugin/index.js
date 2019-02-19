@@ -80,24 +80,25 @@ class DummyPlugin  {
   // IFrame content
   // Pb: how do we pass JS functions (that also use the API)
   // Post message api
-  // and listen
+  // and listen in plugin view and link there to pluginscript
 
   // Render UI should be sessified such that no other JS can be ran in script ?
 
   // when using inline to define the functions
   //Refused to execute inline event handler because it violates the following Content Security Policy directive: "script-src 'self' blob: filesystem: chrome-extension-resource:". Either the 'unsafe-inline' keyword, a hash ('sha256-...'), or a nonce ('nonce-...') is required to enable inline execution.
 
-  
+
+
   renderUI(){
     return(
-      "<script nonce=\"aaa\"> alert(\"it works!!\") </script>"+
+      "<script src=\"pluginIframeScript.js\">function submit() {alert(\"it works\") window.parent.postMessage(\"iFrameFunction\", \"*\")} </script>"+
 	"<div>" +
 	"plugin UI Dummy plugin " +
 	"                       " +
 	"  xPubKey: " + this.xPubKey +
 	"  appAddress: " + this.appAddress  +
 	" last Call result: " + JSON.stringify(this.result,null,'\t') +
-	"<p onmousedown=\"alert(\"button works\")\">Click the text!</p>" +	
+	"<p onmousedown=\"submit()\">Click the text!</p>" +	
 	"</div>"
     )
   }
