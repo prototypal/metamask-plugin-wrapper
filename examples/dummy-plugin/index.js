@@ -90,16 +90,15 @@ class DummyPlugin  {
   
   renderUI(){
     return(
-	'<script nonce=\"aaa\"> function test(){alert(\"test\")} </script>' 
-	+
+      "<script nonce=\"aaa\"> alert(\"it works!!\") </script>"+
 	"<div>" +
 	"plugin UI Dummy plugin " +
 	"                       " +
 	"  xPubKey: " + this.xPubKey +
 	"  appAddress: " + this.appAddress  +
 	" last Call result: " + JSON.stringify(this.result,null,'\t') +
-	"</div>" +
-	'<div> <p onmousedown=test()>Click the text!</p>'
+	"<p onmousedown=\"alert(\"button works\")\">Click the text!</p>" +	
+	"</div>"
     )
   }
 
