@@ -38,6 +38,8 @@ run `npm link eth-hd-keyring` in KeyringController folder
 
 # TODO
 
+[] review content security policy in manifest and plugin view/plugin code
+
 [] provider, secure the rpc calls such that we don't give access to some of them
 
 [] if so, create new provider for each plugin wrapper

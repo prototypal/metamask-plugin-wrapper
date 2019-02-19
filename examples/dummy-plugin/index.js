@@ -75,15 +75,32 @@ class DummyPlugin  {
     }, 5000)
   }
 
+
+
+  // IFrame content
+  // Pb: how do we pass JS functions (that also use the API)
+  // Post message api
+  // and listen
+
+  // Render UI should be sessified such that no other JS can be ran in script ?
+
+  // when using inline to define the functions
+  //Refused to execute inline event handler because it violates the following Content Security Policy directive: "script-src 'self' blob: filesystem: chrome-extension-resource:". Either the 'unsafe-inline' keyword, a hash ('sha256-...'), or a nonce ('nonce-...') is required to enable inline execution.
+
+  
   renderUI(){
-    return("<div>" +
-	   "plugin UI Dummy plugin " +
-	   "                       " +
-	   "  xPubKey: " + this.xPubKey +
-	   "  appAddress: " + this.appAddress  +
-	   " last Call result: " + JSON.stringify(this.result,null,'\t') +
-	   "</div>"
-	  )
+    return(
+	'<script nonce=\"aaa\">alert(\"test\")</script>' 
+	+
+	"<div>" +
+	"plugin UI Dummy plugin " +
+	"                       " +
+	"  xPubKey: " + this.xPubKey +
+	"  appAddress: " + this.appAddress  +
+	" last Call result: " + JSON.stringify(this.result,null,'\t') +
+	"</div>" +
+	'<div> <p onmousedown=\"submit()\">Click the text!</p>'
+    )
   }
 
 		
