@@ -23,14 +23,14 @@ class PluginWrapper {
 
     this.selectedAccount = opts.userAddress
     this.provider = opts.provider
-    this.networkId = opts.networkId
+    this.personaPath = opts.personaPath
     this.plugin = opts.plugin
 
     //actually with this api we don't need to pass the provider directly to the plugins
     // or if we do we should restricts so that the plugins can't call directly the api's rpc methods, nor some others
     // we really want the plugin to have access to read call form the provider, so maybe a subset onlys 
     this.api = {
-      appKey_getXPubKey: this.appKey_getXPubKey.bind(this),
+      appKey_eth_getPublicKey: this.appKey_eth_getPublicKey.bind(this),
       appKey_eth_getAddress: this.appKey_eth_getAddress.bind(this),
       appKey_eth_signTransaction: this.appKey_eth_signTransaction.bind(this),
       appKey_eth_signTypedMessage: this.appKey_eth_signTypedMessage.bind(this),
@@ -41,10 +41,10 @@ class PluginWrapper {
     const pluginProvider = this.provider
     const pluginOptions = {
 	provider: pluginProvider,
-	networkId: this.networkId,
+	personaPath: this.personaPath,
 	api: this.api,
 	selectedAccount: this.selectedAccount
-      }
+    }
     if (this.plugin.scriptUrl == "cf") {
       this.pluginScript = new CfPluginScript(pluginOptions)
     }
@@ -61,9 +61,8 @@ class PluginWrapper {
 
 
 
-
-  // 0x37a962652fcb752ae373feb022dd2882a9348b79
-  // 37a9 6265 2fcb 752a e373 feb0 22dd 2882 a934 8b79
+  // e4a10c258c7b68c38df1cf0caf03ce2e34b5ec02e5abdd3ef18f0703f317c62a
+  // e4a1/0c25/8c7b/68c3/8df1/cf0c/af03/ce2e/34b5/ec02/e5ab/dd3e/f18f/0703/f317/c62a
   // m/14249/25189/12235/29994/58227/65200/8925/10370/43316/35705
   splitUid(uid) {
     let subPath = ""
@@ -78,14 +77,22 @@ class PluginWrapper {
     return subPath
   }
 
-  appKey_getXPubKey(params){
-    console.log("dummy plugin getXPubKey", params)
+  computeFullPath(hdSubPath) {
+    const personaPath = this.plugin.personaPath
+    const uidSubPath = this.splitUid(this.plugin.uid)
+    const hdPath = "m/52/" + personaPath + "/" + uidSubPath +"/"  + hdSubPath
+    return hdPath
+  }
+  appKey_eth_getPublicKey(params){
+    console.log("dummy plugin getPublicKey", params)
     const provider = this.provider
+    const hdPath = this.computeFullPath(params[0])
+    const newParams = [hdPath]
     const xPub = new Promise(function(resolve, reject) {
       provider.sendAsync(
 	{
-	  method: "appKey_getXPubKey",
-	  params: params,
+	  method: "appKey_eth_getPublicKey",
+	  params: newParams,
 	}, function(err, result){
 	  console.log("dummy plugin received answer", err, result)
 	  resolve(result)
@@ -99,10 +106,8 @@ class PluginWrapper {
     console.log("dummy plugin getAddress", params)
     // there is a limit on index values, var HARDENED_OFFSET = 0x80000000
     // for the index derived from the authorAddress we need to find a way to split it
-    const uidSubPath = this.splitUid(this.plugin.uid)
-    const hdPath = "m/52/" + uidSubPath +"/"  + params[0]
-    const index = params[1]
-    const newParams = [hdPath, index]
+    const hdPath = this.computeFullPath(params[0])
+    const newParams = [hdPath]
     console.log(newParams)
     const provider = this.provider
     const appKeyAddress = new Promise(function(resolve, reject){

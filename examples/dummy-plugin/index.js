@@ -4,19 +4,19 @@ class DummyPlugin  {
     this.mainBalance = 'dummyBalance'
     this.renderUI = this.renderUI.bind(this)
     this.pluginInterface ={
-        actions:[{name: "getXPubKey",
-    		  call:this.appKey_getXPubKey.bind(this),
-    		  params:[]
+        actions:[{name: "appKey_eth_getPublicKey",
+    		  call:this.appKey_eth_getPublicKey.bind(this),
+    		  params:[{name: "subHdPath",
+			   type: "string"}
+			 ]
     		 },
-		 {name: "getAppAddress  -  AppAccount",
+		 {name: "appKey_eth_getAddress  -  AppAccount",
     		  call:this.appKey_eth_getAddress.bind(this),
     		  params:[{name: "subHdPath",
-			   type: "string"},
-			  {name: "accountIndex",
-    			   type: "uint"},
+			   type: "string"}
     			 ]
     		 },
-		 {name: "sendTransactionAppKey - AppAccount",
+		 {name: "appKey_eth_sendTransaction - AppAccount",
     		  call:this.appKey_eth_signTransaction.bind(this),
     		  params:[{name: "from",
     			   type: "string"},
@@ -26,7 +26,7 @@ class DummyPlugin  {
     			   type: "uint"},			  
     			 ]
     		 },
-		 {name: "signTypedMessageAppKey - AppAccount",
+		 {name: "appKey_eth_signTypedMessage - AppAccount",
     		  call:this.appKey_eth_signTypedMessage.bind(this),
     		  params:[{name: "from",
     			   type: "string"},
@@ -34,7 +34,7 @@ class DummyPlugin  {
     			   type: "uint"},			  
     			 ]
     		 },
-		 {name: "sendFromMainAccount",
+		 {name: "eth_sendFromMainAccount",
     		  call:this.sendFromMainAccount.bind(this),
     		  params:[{name: "to",
     			   type: "string"},			  
@@ -42,7 +42,7 @@ class DummyPlugin  {
     			   type: "uint"},			  
     			 ]
     		 },
-		 {name: "signTypedMessageFromMainAccount",
+		 {name: "eth_signTypedMessageFromMainAccount",
     		  call:this.signTypedMessageFromMainAccount.bind(this),
     		  params:[{name: "message",
     			   type: "string"},
@@ -91,7 +91,7 @@ class DummyPlugin  {
 
   renderUI(){
     return(
-      "<script src=\"pluginIframeScript.js\">function submit() {alert(\"it works\") window.parent.postMessage(\"iFrameFunction\", \"*\")} </script>"+
+      "<script>function submit() {alert(\"it works\")} </script>"+
 	"<div>" +
 	"plugin UI Dummy plugin " +
 	"                       " +
@@ -104,9 +104,9 @@ class DummyPlugin  {
   }
 
 		
-  async appKey_getXPubKey(params){
+  async appKey_eth_getPublicKey(params){
     console.log("dummy plugin getXPubKey", params)
-    const ans = await this.api.appKey_getXPubKey(params)
+    const ans = await this.api.appKey_eth_getPublicKey(params)
     console.log(ans)
     this.xPubKey = ans.result
     console.log(this.xPubKey)

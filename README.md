@@ -1,11 +1,12 @@
 # METAMASK PLUGIN WRAPPER
 
-Wraps plugins into a secure container for code isolation (iframe first, then using SES with plugin that should be sessified)
+Implements the app key api for the plugin's domain
+Loads the plugin's script and interface
+Passes parameters and the provider to the plugin's
 
-Implements the message API communications
-
-Will inject the plugin functions and state into visited webpages
-Will be ran in metamask extension background page
+[TBD] Wraps plugins into a secure container for code isolation (Using SES with plugin that should be sessified)
+[TBD] Will inject the plugin functions and state into visited webpages
+[TBD] Will be ran in metamask extension background page
 
 ## Metamask Plugins
 
@@ -40,7 +41,7 @@ run `npm link eth-hd-keyring` in KeyringController folder
 
 [] review content security policy in manifest and plugin view/plugin code
 
-[] provider, secure the rpc calls such that we don't give access to some of them
+[] restrict provider, secure the rpc calls such that we don't give access to some of them
 
 [] if so, create new provider for each plugin wrapper
 
