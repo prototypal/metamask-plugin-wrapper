@@ -9,6 +9,8 @@
   "author": "Bunjin",
   "license": "ISC",
   "dependencies": {
+    "@counterfactual/cf.js": "0.0.5",
+    "@counterfactual/node": "0.0.2",
     "ethjs-query": "^0.3.8"
   }
 }
