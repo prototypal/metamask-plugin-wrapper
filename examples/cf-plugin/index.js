@@ -5,7 +5,7 @@ class CfPlugin {
   constructor(opts = {}) {
     console.log(CF);
     console.log(CFNode);
-    this.mainBalance = "dummyBalance";
+    this.mainBalance = 0;
     this.src = "https://playground-staging.counterfactual.com/";
     this.renderUI = this.renderUI.bind(this);
     this.pluginInterface = {
